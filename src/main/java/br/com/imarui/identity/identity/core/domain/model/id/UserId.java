@@ -1,6 +1,5 @@
-package br.com.imarui.identity.identity.core.domain.model;
+package br.com.imarui.identity.identity.core.domain.model.id;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -12,17 +11,14 @@ public record UserId(@NotNull UUID value) {
         Objects.requireNonNull(value, "UserId value must not be null.");
     }
 
-    @Contract(" -> new")
     public static @NotNull UserId generate() {
         return new UserId(UUID.randomUUID());
     }
 
-    @Contract(value = "_ -> new", pure = true)
     public static @NotNull UserId from(@NotNull UUID value) {
         return new UserId(value);
     }
 
-    @Contract(value = "_ -> new", pure = true)
     public static @NotNull UserId from(@NotNull String value) {
         Objects.requireNonNull(value, "UserId value must not be null.");
 

@@ -3,7 +3,7 @@ package br.com.imarui.identity.identity.core.domain.model;
 import br.com.imarui.identity.identity.core.domain.enums.AccountStatus;
 import br.com.imarui.identity.identity.core.domain.enums.AuthenticationStatus;
 import br.com.imarui.identity.identity.core.domain.enums.CredentialStatus;
-import br.com.imarui.identity.identity.core.domain.enums.UserStatus;
+import br.com.imarui.identity.identity.core.domain.enums.user.UserStatus;
 import br.com.imarui.identity.identity.core.domain.exceptions.user.UserAlreadyDisabledException;
 import br.com.imarui.identity.identity.core.domain.exceptions.user.UserBlockedForLoginException;
 import br.com.imarui.identity.identity.core.domain.exceptions.user.UserCannotChangePasswordException;
@@ -12,7 +12,7 @@ import br.com.imarui.identity.identity.core.domain.exceptions.user.UserNotDisabl
 import br.com.imarui.identity.identity.core.domain.exceptions.user.UserNotLockoutException;
 import br.com.imarui.identity.identity.core.domain.exceptions.user.UserNowInstantRequiredException;
 import br.com.imarui.identity.identity.core.domain.exceptions.user.UserPasswordChangeRequiredException;
-import lombok.AccessLevel;
+import br.com.imarui.identity.identity.core.domain.model.id.UserId;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -28,8 +28,8 @@ public class User {
     private final UserId id;
     private FullName name;
     private LocalDate birthDate;
-    private Email primaryEmail;
-    private PhoneNumber phoneNumber;
+    private Set<UserEmail> emails;
+    private UserPhoneNumber phoneNumber;
     private ProfilePhoto profilePhoto;
     private UserStatus status;
     private IdentityKind kind;
