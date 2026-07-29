@@ -1,7 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.enums.user;
 
-public enum UserStatus {
+public enum AffiliationStatus {
     ACTIVE,
-    PENDING,
-    DISABLED
+    INACTIVE
 }

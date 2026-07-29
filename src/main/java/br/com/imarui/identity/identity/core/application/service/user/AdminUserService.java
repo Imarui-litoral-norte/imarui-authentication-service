@@ -58,7 +58,7 @@ public class AdminUserService {
 
         Instant now = Instant.now(clock);
 
-        user.enable(now);
+        user.reactivate(now);
 
         User savedUser =
                 userRepository.save(user);
