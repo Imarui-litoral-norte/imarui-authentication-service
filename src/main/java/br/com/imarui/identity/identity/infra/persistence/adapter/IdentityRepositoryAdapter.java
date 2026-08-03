@@ -3,6 +3,7 @@ package br.com.imarui.identity.identity.infra.persistence.adapter;
 import br.com.imarui.identity.identity.core.domain.model.identity.*;
 import br.com.imarui.identity.identity.core.domain.model.identity.LegalEntity.Cnpj;
 import br.com.imarui.identity.identity.core.domain.model.identity.person.Cpf;
+import br.com.imarui.identity.identity.core.repository.IdentityRepository;
 import br.com.imarui.identity.identity.infra.persistence.entity.identity.IdentityEntity;
 import br.com.imarui.identity.identity.infra.persistence.jpa.IdentityJpaRepository;
 import br.com.imarui.identity.identity.infra.persistence.mapper.IdentityPersistenceMapper;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class IdentityRepositoryAdapter {
+public class IdentityRepositoryAdapter implements IdentityRepository {
 
     private final IdentityJpaRepository jpaRepository;
     private final IdentityPersistenceMapper mapper;

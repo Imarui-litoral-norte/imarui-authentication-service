@@ -1,6 +1,7 @@
 package br.com.imarui.identity.identity.core.domain.model.tenant;
 
 import br.com.imarui.identity.identity.core.domain.enums.tenant.TenantStatus;
+import br.com.imarui.identity.identity.core.domain.exception.tenant.TenantRenameNotAllowedException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -140,9 +141,18 @@ public final class Tenant {
             @NotNull TenantName newName,
             @NotNull Instant now
     ) {
-        Objects.requireNonNull(newName, "newName cannot be null");
-        Objects.requireNonNull(now, "now cannot be null");
+        Objects.requireNonNull(
+                newName,
+                "newName cannot be null"
+        );
+
+        Objects.requireNonNull(
+                now,
+                "now cannot be null"
+        );
+
         validateEventTime(now);
+        validateCanRename();
 
         if (name.equals(newName)) {
             return;
@@ -150,6 +160,15 @@ public final class Tenant {
 
         name = newName;
         updatedAt = now;
+    }
+
+    private void validateCanRename() {
+        if (isDisabled()) {
+            throw new TenantRenameNotAllowedException(
+                    id,
+                    status
+            );
+        }
     }
 
     public boolean isPending() {

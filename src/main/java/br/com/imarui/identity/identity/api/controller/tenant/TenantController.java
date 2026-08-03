@@ -4,8 +4,8 @@ import br.com.imarui.identity.identity.api.dto.tenant.request.RenameTenantReques
 import br.com.imarui.identity.identity.api.dto.tenant.response.TenantResponse;
 import br.com.imarui.identity.identity.core.application.command.tenant.RenameTenantCommand;
 import br.com.imarui.identity.identity.core.application.result.tenant.TenantResult;
-import br.com.imarui.identity.identity.core.application.service.tenant.GetTenantService;
-import br.com.imarui.identity.identity.core.application.service.tenant.RenameTenantService;
+import br.com.imarui.identity.identity.core.application.usecase.tenant.GetTenantUseCase;
+import br.com.imarui.identity.identity.core.application.usecase.tenant.RenameTenantUseCase;
 import br.com.imarui.identity.identity.core.domain.model.tenant.TenantId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

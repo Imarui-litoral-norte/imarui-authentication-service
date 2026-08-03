@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.identity.LegalEntity;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.InvalidTradeNameException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.InvalidTradeNameException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

@@ -2,10 +2,10 @@ package br.com.imarui.identity.identity.core.domain.model.identity;
 
 import br.com.imarui.identity.identity.core.domain.enums.identity.IdentityKind;
 import br.com.imarui.identity.identity.core.domain.enums.identity.IdentityStatus;
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityAlreadyActiveException;
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityAlreadyDisabledException;
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityNotDisabledException;
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.InvalidIdentityStateException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.IdentityAlreadyActiveException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.IdentityAlreadyDisabledException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.IdentityNotDisabledException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.InvalidIdentityStateException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 

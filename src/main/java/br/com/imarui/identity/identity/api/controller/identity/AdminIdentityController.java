@@ -2,7 +2,6 @@ package br.com.imarui.identity.identity.api.controller.identity;
 
 import br.com.imarui.identity.authentication.api.http.dto.admin.user.AdminUserResponseDTO;
 import br.com.imarui.identity.authentication.core.application.result.admin.user.AdminUserResult;
-import br.com.imarui.identity.identity.core.application.service.user.AdminUserService;
 import br.com.imarui.identity.platform.openapi.group.SwaggerOperationGroup;
 import br.com.imarui.identity.platform.openapi.security.RequiredPermission;
 import br.com.imarui.identity.platform.web.exception.ApiErrorResponse;

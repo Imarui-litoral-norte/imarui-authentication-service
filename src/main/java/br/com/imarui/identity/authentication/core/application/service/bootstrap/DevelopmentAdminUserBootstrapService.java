@@ -1,9 +1,8 @@
 package br.com.imarui.identity.authentication.core.application.service.bootstrap;
 
-import br.com.imarui.identity.identity.core.application.exceptions.identity.RegistrationConflictException;
+import br.com.imarui.identity.identity.core.application.exception.identity.RegistrationConflictException;
 import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.port.PasswordHasher;
-import br.com.imarui.identity.identity.core.repository.UserRepository;
 import br.com.imarui.identity.shared.bootstrap.AdminBootstrapConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

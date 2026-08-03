@@ -12,7 +12,6 @@ import br.com.imarui.identity.authentication.core.port.JwtService;
 import br.com.imarui.identity.authentication.core.port.RefreshTokenHashService;
 import br.com.imarui.identity.authentication.core.repository.RefreshTokenRepository;
 import br.com.imarui.identity.authentication.core.repository.SessionRepository;
-import br.com.imarui.identity.identity.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

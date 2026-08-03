@@ -1,6 +1,7 @@
 package br.com.imarui.identity.identity.infra.persistence.adapter;
 
 import br.com.imarui.identity.identity.core.domain.model.tenant.*;
+import br.com.imarui.identity.identity.core.repository.TenantRepository;
 import br.com.imarui.identity.identity.infra.persistence.entity.tenant.TenantEntity;
 import br.com.imarui.identity.identity.infra.persistence.jpa.TenantJpaRepository;
 import br.com.imarui.identity.identity.infra.persistence.mapper.TenantPersistenceMapper;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class TenantRepositoryAdapter {
+public class TenantRepositoryAdapter implements TenantRepository {
 
     private final TenantJpaRepository jpaRepository;
     private final TenantPersistenceMapper mapper;

@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.affiliation.customer;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.affiliation.InvalidCustomerCodeException;
+import br.com.imarui.identity.identity.core.domain.exception.affiliation.InvalidCustomerCodeException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

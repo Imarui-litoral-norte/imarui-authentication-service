@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.identity.service;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.InvalidServiceNameException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.InvalidServiceNameException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

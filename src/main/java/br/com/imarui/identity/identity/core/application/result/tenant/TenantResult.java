@@ -19,9 +19,7 @@ public record TenantResult(
         @Nullable Instant disabledAt
 ) {
 
-    public static TenantResult from(
-            @NotNull Tenant tenant
-    ) {
+    public static TenantResult from(Tenant tenant) {
         return new TenantResult(
                 tenant.getId().value(),
                 tenant.getCode().value(),

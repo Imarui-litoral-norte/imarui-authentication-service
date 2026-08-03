@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.tenant;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.tenant.InvalidTenantNameException;
+import br.com.imarui.identity.identity.core.domain.exception.tenant.InvalidTenantNameException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

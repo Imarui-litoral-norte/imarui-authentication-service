@@ -7,6 +7,7 @@ import br.com.imarui.identity.identity.core.domain.model.affiliation.employee.Em
 import br.com.imarui.identity.identity.core.domain.model.affiliation.supplier.SupplierCode;
 import br.com.imarui.identity.identity.core.domain.model.identity.IdentityId;
 import br.com.imarui.identity.identity.core.domain.model.tenant.TenantId;
+import br.com.imarui.identity.identity.core.repository.AffiliationRepository;
 import br.com.imarui.identity.identity.infra.persistence.entity.affiliation.AffiliationEntity;
 import br.com.imarui.identity.identity.infra.persistence.jpa.AffiliationJpaRepository;
 import br.com.imarui.identity.identity.infra.persistence.mapper.AffiliationPersistenceMapper;
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class AffiliationRepositoryAdapter {
+public class AffiliationRepositoryAdapter implements AffiliationRepository {
 
     private final AffiliationJpaRepository jpaRepository;
     private final AffiliationPersistenceMapper mapper;

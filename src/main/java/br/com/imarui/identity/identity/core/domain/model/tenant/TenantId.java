@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.tenant;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.tenant.InvalidTenantIdException;
+import br.com.imarui.identity.identity.core.domain.exception.tenant.InvalidTenantIdException;
 
 import java.util.Objects;
 import java.util.UUID;

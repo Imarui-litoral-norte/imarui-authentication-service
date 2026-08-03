@@ -1,7 +1,7 @@
 package br.com.imarui.identity.authentication.core.application.service.passwordrecovery;
 
 import br.com.imarui.identity.authentication.core.application.exceptions.login.PasswordRecoveryRequestNotFoundException;
-import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.application.exception.identity.UserIdNotFoundException;
 import br.com.imarui.identity.authentication.core.application.result.IssuedPasswordResetToken;
 import br.com.imarui.identity.authentication.core.application.result.IssuedTemporaryPassword;
 import br.com.imarui.identity.authentication.core.application.result.PasswordResetLinkAdminResult;
@@ -14,7 +14,6 @@ import br.com.imarui.identity.authentication.core.application.service.internal.T
 import br.com.imarui.identity.authentication.core.domain.model.PasswordRecoveryRequest;
 import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.repository.PasswordRecoveryRequestRepository;
-import br.com.imarui.identity.identity.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.affiliation.supplier;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.affiliation.InvalidSupplierCodeException;
+import br.com.imarui.identity.identity.core.domain.exception.affiliation.InvalidSupplierCodeException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

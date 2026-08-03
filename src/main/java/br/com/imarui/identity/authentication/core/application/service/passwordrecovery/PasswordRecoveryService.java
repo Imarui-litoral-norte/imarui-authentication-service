@@ -2,7 +2,7 @@ package br.com.imarui.identity.authentication.core.application.service.passwordr
 
 import br.com.imarui.identity.authentication.core.application.exceptions.tokenhash.TokenInvalidException;
 import br.com.imarui.identity.authentication.core.application.exceptions.tokenhash.TokenNotFoundException;
-import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.application.exception.identity.UserIdNotFoundException;
 import br.com.imarui.identity.authentication.core.application.result.IssuedPasswordResetToken;
 import br.com.imarui.identity.authentication.core.application.result.PublicPasswordRecoveryResult;
 import br.com.imarui.identity.authentication.core.application.service.internal.CredentialRevocationService;
@@ -14,7 +14,6 @@ import br.com.imarui.identity.authentication.core.port.NotificationPort;
 import br.com.imarui.identity.authentication.core.port.PasswordHasher;
 import br.com.imarui.identity.authentication.core.port.RefreshTokenHashService;
 import br.com.imarui.identity.authentication.core.repository.PasswordRecoveryRequestRepository;
-import br.com.imarui.identity.identity.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

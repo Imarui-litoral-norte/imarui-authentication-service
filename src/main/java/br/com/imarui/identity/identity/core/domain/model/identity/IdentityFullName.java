@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.identity;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.InvalidFullNameException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.InvalidFullNameException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

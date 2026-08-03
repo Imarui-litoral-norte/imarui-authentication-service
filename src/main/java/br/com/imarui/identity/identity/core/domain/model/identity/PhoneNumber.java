@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.identity;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.InvalidPhoneNumberException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.InvalidPhoneNumberException;
 
 public record PhoneNumber(String value) {
 

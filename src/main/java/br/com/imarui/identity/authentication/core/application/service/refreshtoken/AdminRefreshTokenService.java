@@ -1,11 +1,10 @@
 package br.com.imarui.identity.authentication.core.application.service.refreshtoken;
 
 import br.com.imarui.identity.authentication.core.application.exceptions.refreshtoken.RefreshTokenNotFoundException;
-import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.application.exception.identity.UserIdNotFoundException;
 import br.com.imarui.identity.authentication.core.application.result.admin.refresh.AdminRefreshTokenResult;
 import br.com.imarui.identity.authentication.core.domain.model.RefreshToken;
 import br.com.imarui.identity.authentication.core.repository.RefreshTokenRepository;
-import br.com.imarui.identity.identity.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.identity.service;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.InvalidServiceDescriptionException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.InvalidServiceDescriptionException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

@@ -8,6 +8,8 @@ import br.com.imarui.identity.identity.core.application.service.tenant.ActivateT
 import br.com.imarui.identity.identity.core.application.service.tenant.CreateTenantService;
 import br.com.imarui.identity.identity.core.application.service.tenant.DisableTenantService;
 import br.com.imarui.identity.identity.core.application.service.tenant.ReactivateTenantService;
+import br.com.imarui.identity.identity.core.application.usecase.tenant.CreateTenantUseCase;
+import br.com.imarui.identity.identity.core.application.usecase.tenant.GetTenantUseCase;
 import br.com.imarui.identity.identity.core.domain.model.tenant.TenantId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +26,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class AdminTenantController {
 
-    private final CreateTenantService createTenantService;
+    private final GetTenantUseCase getTenantUseCase;
     private final ActivateTenantService activateTenantService;
     private final DisableTenantService disableTenantService;
     private final ReactivateTenantService reactivateTenantService;
+    private final CreateTenantUseCase createTenantUseCase;
 
     @PostMapping
     public ResponseEntity<TenantResponse> create(
@@ -39,7 +42,7 @@ public class AdminTenantController {
                 request.name()
         );
 
-        TenantResult result = createTenantService.execute(command);
+        TenantResult result = createTenantUseCase.execute(command);
 
         return ResponseEntity
                 .created(

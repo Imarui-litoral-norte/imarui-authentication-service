@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.affiliation.employee;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.affiliation.InvalidEmployeeRegistrationException;
+import br.com.imarui.identity.identity.core.domain.exception.affiliation.InvalidEmployeeRegistrationException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

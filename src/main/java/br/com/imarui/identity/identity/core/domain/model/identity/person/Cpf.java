@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.identity.person;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.InvalidCpfException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.InvalidCpfException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

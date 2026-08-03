@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model.identity.LegalEntity;
 
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.InvalidCnpjException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.InvalidCnpjException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

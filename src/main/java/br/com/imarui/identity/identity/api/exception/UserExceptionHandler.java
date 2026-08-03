@@ -1,14 +1,14 @@
 package br.com.imarui.identity.identity.api.exception;
 
 import br.com.imarui.identity.authentication.core.application.exceptions.login.InvalidCredentialsException;
-import br.com.imarui.identity.identity.core.application.exceptions.identity.RegistrationConflictException;
-import br.com.imarui.identity.identity.core.application.exceptions.identity.UserCpfInvalidException;
-import br.com.imarui.identity.identity.core.application.exceptions.identity.UserDisabledException;
-import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityAlreadyDisabledException;
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityIdRequiredException;
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityNotDisabledException;
-import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityNowInstantRequiredException;
+import br.com.imarui.identity.identity.core.application.exception.identity.RegistrationConflictException;
+import br.com.imarui.identity.identity.core.application.exception.identity.UserCpfInvalidException;
+import br.com.imarui.identity.identity.core.application.exception.identity.UserDisabledException;
+import br.com.imarui.identity.identity.core.application.exception.identity.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.IdentityAlreadyDisabledException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.IdentityIdRequiredException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.IdentityNotDisabledException;
+import br.com.imarui.identity.identity.core.domain.exception.identity.IdentityNowInstantRequiredException;
 import br.com.imarui.identity.platform.web.exception.ApiErrorResponse;
 import br.com.imarui.identity.platform.web.exception.ApiExceptionHandler;
 import org.springframework.http.HttpStatus;

@@ -5,8 +5,8 @@ import br.com.imarui.identity.authentication.core.application.exceptions.login.P
 import br.com.imarui.identity.authentication.core.application.exceptions.login.PasswordRecoveryRequestNotFoundException;
 import br.com.imarui.identity.authentication.core.application.exceptions.session.SessionNotFoundException;
 import br.com.imarui.identity.authentication.core.application.exceptions.session.SessionUserMismatchException;
-import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
-import br.com.imarui.identity.identity.core.application.exceptions.identity.UserPasswordChangeNotRequiredException;
+import br.com.imarui.identity.identity.core.application.exception.identity.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.application.exception.identity.UserPasswordChangeNotRequiredException;
 import br.com.imarui.identity.authentication.core.application.result.AuthTokens;
 import br.com.imarui.identity.authentication.core.application.result.MeResult;
 import br.com.imarui.identity.authentication.core.application.result.login.AuthenticatedLoginResult;
@@ -25,7 +25,6 @@ import br.com.imarui.identity.authentication.core.repository.PasswordChangeChall
 import br.com.imarui.identity.authentication.core.repository.PasswordRecoveryRequestRepository;
 import br.com.imarui.identity.authentication.core.repository.RefreshTokenRepository;
 import br.com.imarui.identity.authentication.core.repository.SessionRepository;
-import br.com.imarui.identity.identity.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
