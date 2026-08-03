@@ -18,14 +18,14 @@ import br.com.imarui.identity.authentication.core.domain.enums.PasswordRecoveryR
 import br.com.imarui.identity.authentication.core.domain.model.PasswordChangeChallenge;
 import br.com.imarui.identity.authentication.core.domain.model.PasswordRecoveryRequest;
 import br.com.imarui.identity.authentication.core.domain.model.Session;
-import br.com.imarui.identity.identity.core.domain.model.User;
+import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.port.PasswordHasher;
 import br.com.imarui.identity.authentication.core.port.RefreshTokenHashService;
 import br.com.imarui.identity.authentication.core.repository.PasswordChangeChallengeRepository;
 import br.com.imarui.identity.authentication.core.repository.PasswordRecoveryRequestRepository;
 import br.com.imarui.identity.authentication.core.repository.RefreshTokenRepository;
 import br.com.imarui.identity.authentication.core.repository.SessionRepository;
-import br.com.imarui.identity.authentication.core.repository.UserRepository;
+import br.com.imarui.identity.identity.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +54,7 @@ public class SessionService {
     @Transactional(noRollbackFor = InvalidCredentialsException.class)
     public LoginResult login(String cpf, String password) {
         Instant now = Instant.now(clock);
-        User user = userRepository.findByCpfForUpdate(cpf)
+        Identity user = userRepository.findByCpfForUpdate(cpf)
                 .orElseThrow(InvalidCredentialsException::new);
 
         if (!passwordHasher.matches(password, user.getPasswordHash())) {
@@ -80,7 +80,7 @@ public class SessionService {
         String tokenHash = tokenHashService.hash(rawToken);
         Long userId = challengeRepository.findUserIdByTokenHash(tokenHash)
                 .orElseThrow(this::invalidChallenge);
-        User user = userRepository.findByIdForUpdate(userId)
+        Identity user = userRepository.findByIdForUpdate(userId)
                 .orElseThrow(() -> new UserIdNotFoundException("User not found."));
         PasswordChangeChallenge challenge = challengeRepository
                 .findByTokenHashForUpdate(tokenHash)
@@ -123,7 +123,7 @@ public class SessionService {
         Objects.requireNonNull(sessionId, "sessionId cannot be null");
         Objects.requireNonNull(accessTokenExpiresAt, "accessTokenExpiresAt cannot be null");
         Instant now = Instant.now(clock);
-        User user = userRepository.findById(userId)
+        Identity user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserIdNotFoundException("User not found"));
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new SessionNotFoundException("Session not found"));

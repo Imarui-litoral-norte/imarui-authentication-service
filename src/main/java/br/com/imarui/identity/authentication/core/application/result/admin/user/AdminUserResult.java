@@ -1,6 +1,6 @@
 package br.com.imarui.identity.authentication.core.application.result.admin.user;
 
-import br.com.imarui.identity.identity.core.domain.model.User;
+import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 
 import java.time.Instant;
 import java.util.List;
@@ -18,7 +18,7 @@ public record AdminUserResult(
         Instant updatedAt
 ) {
 
-    public static AdminUserResult from(User user) {
+    public static AdminUserResult from(Identity user) {
         Objects.requireNonNull(user, "user cannot be null");
 
         return new AdminUserResult(
@@ -34,7 +34,7 @@ public record AdminUserResult(
         );
     }
 
-    public static List<AdminUserResult> from(List<User> users) {
+    public static List<AdminUserResult> from(List<Identity> users) {
         Objects.requireNonNull(users, "users cannot be null");
 
         return users.stream()

@@ -4,9 +4,9 @@ import br.com.imarui.identity.identity.core.application.exceptions.user.Registra
 import br.com.imarui.identity.identity.core.application.exceptions.user.UserIdNotFoundException;
 import br.com.imarui.identity.authentication.core.application.result.AuthTokens;
 import br.com.imarui.identity.authentication.core.application.service.internal.TokenIssuanceService;
-import br.com.imarui.identity.identity.core.domain.model.User;
+import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.port.PasswordHasher;
-import br.com.imarui.identity.authentication.core.repository.UserRepository;
+import br.com.imarui.identity.identity.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class UserService {
     private final TokenIssuanceService tokenIssuanceService;
     private final Clock clock;
 
-    public User register(
+    public Identity register(
             String name,
             LocalDate birthDate,
             String email,
@@ -54,7 +54,7 @@ public class UserService {
             String rawPassword,
             String phoneNumber
     ) {
-        User user = registerUser(
+        Identity user = registerUser(
                 name,
                 birthDate,
                 email,
@@ -64,7 +64,7 @@ public class UserService {
                 phoneNumber
         );
 
-        User lockedUser = userRepository.findByIdForUpdate(user.getId())
+        Identity lockedUser = userRepository.findByIdForUpdate(user.getId())
                 .orElseThrow(() -> new UserIdNotFoundException("Registered user not found."));
         Instant now = Instant.now(clock);
         AuthTokens tokens = tokenIssuanceService.issue(lockedUser, now);
@@ -73,7 +73,7 @@ public class UserService {
         return tokens;
     }
 
-    private User registerUser(
+    private Identity registerUser(
             String name,
             LocalDate birthDate,
             String email,
@@ -92,7 +92,7 @@ public class UserService {
 
         String passwordHash = passwordHasher.hash(passwordRaw);
 
-        User newUser = User.create(
+        Identity newUser = Identity.create(
                 name,
                 birthDate,
                 email,

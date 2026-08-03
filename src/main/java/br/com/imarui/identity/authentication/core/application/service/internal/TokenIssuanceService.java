@@ -4,7 +4,7 @@ import br.com.imarui.identity.authentication.core.application.result.AuthTokens;
 import br.com.imarui.identity.authentication.core.application.result.IssuedRefreshToken;
 import br.com.imarui.identity.authentication.core.domain.model.IssuedAccessToken;
 import br.com.imarui.identity.authentication.core.domain.model.Session;
-import br.com.imarui.identity.identity.core.domain.model.User;
+import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.port.JwtService;
 import br.com.imarui.identity.authentication.core.port.ApplicationTimeProperties;
 import br.com.imarui.identity.authentication.core.repository.SessionRepository;
@@ -23,7 +23,7 @@ public class TokenIssuanceService {
     private final JwtService jwtService;
     private final ApplicationTimeProperties authTimeProperties;
 
-    public AuthTokens issue(User user, Instant now) {
+    public AuthTokens issue(Identity user, Instant now) {
         user.assertCanAuthenticate();
 
         Session session = sessionRepository

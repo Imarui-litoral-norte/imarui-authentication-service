@@ -9,12 +9,12 @@ import br.com.imarui.identity.authentication.core.application.service.internal.C
 import br.com.imarui.identity.authentication.core.application.service.internal.PasswordRecoveryRequestManager;
 import br.com.imarui.identity.authentication.core.application.service.internal.PasswordResetTokenIssuer;
 import br.com.imarui.identity.authentication.core.domain.model.PasswordRecoveryRequest;
-import br.com.imarui.identity.identity.core.domain.model.User;
+import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.port.NotificationPort;
 import br.com.imarui.identity.authentication.core.port.PasswordHasher;
 import br.com.imarui.identity.authentication.core.port.RefreshTokenHashService;
 import br.com.imarui.identity.authentication.core.repository.PasswordRecoveryRequestRepository;
-import br.com.imarui.identity.authentication.core.repository.UserRepository;
+import br.com.imarui.identity.identity.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +39,7 @@ public class PasswordRecoveryService {
     @Transactional
     public PublicPasswordRecoveryResult request(String cpf) {
         Instant now = Instant.now(clock);
-        User user = userRepository.findByCpfForUpdate(cpf).orElse(null);
+        Identity user = userRepository.findByCpfForUpdate(cpf).orElse(null);
         if (user != null && !user.isDisabled()) {
             requestManager.getOrCreate(user.getId(), now);
         }
@@ -49,7 +49,7 @@ public class PasswordRecoveryService {
     @Transactional
     public PublicPasswordRecoveryResult sendEmailToken(String cpf) {
         Instant now = Instant.now(clock);
-        User user = userRepository.findByCpfForUpdate(cpf).orElse(null);
+        Identity user = userRepository.findByCpfForUpdate(cpf).orElse(null);
         if (user == null || user.isDisabled()
                 || user.getEmail() == null || user.getEmail().isBlank()) {
             return requestManager.genericEmailResult(now);
@@ -71,7 +71,7 @@ public class PasswordRecoveryService {
         String tokenHash = tokenHashService.hash(rawToken);
         Long userId = requestRepository.findUserIdByTokenHash(tokenHash)
                 .orElseThrow(() -> new TokenNotFoundException("Token invalid or expired."));
-        User user = userRepository.findByIdForUpdate(userId)
+        Identity user = userRepository.findByIdForUpdate(userId)
                 .orElseThrow(() -> new UserIdNotFoundException("User not found with this id."));
         PasswordRecoveryRequest request = requestRepository.findByTokenHashForUpdate(tokenHash)
                 .orElseThrow(() -> new TokenNotFoundException("Token invalid or expired."));

@@ -12,9 +12,9 @@ import br.com.imarui.identity.authentication.core.application.service.internal.P
 import br.com.imarui.identity.authentication.core.application.service.internal.PasswordResetTokenIssuer;
 import br.com.imarui.identity.authentication.core.application.service.internal.TemporaryPasswordIssuer;
 import br.com.imarui.identity.authentication.core.domain.model.PasswordRecoveryRequest;
-import br.com.imarui.identity.identity.core.domain.model.User;
+import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.repository.PasswordRecoveryRequestRepository;
-import br.com.imarui.identity.authentication.core.repository.UserRepository;
+import br.com.imarui.identity.identity.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,7 +64,7 @@ public class AdminPasswordRecoveryService {
     @Transactional
     public TemporaryPasswordAdminResult generateTemporaryPassword(Long userId) {
         Instant now = Instant.now(clock);
-        User user = userRepository.findByIdForUpdate(userId)
+        Identity user = userRepository.findByIdForUpdate(userId)
                 .orElseThrow(() -> new UserIdNotFoundException("User target not found."));
         user.assertCanRequestPasswordChange();
         PasswordRecoveryRequest request = requestManager.getOrCreate(user.getId(), now);
@@ -81,7 +81,7 @@ public class AdminPasswordRecoveryService {
     @Transactional
     public PasswordResetLinkAdminResult generateResetLink(Long userId) {
         Instant now = Instant.now(clock);
-        User user = userRepository.findByIdForUpdate(userId)
+        Identity user = userRepository.findByIdForUpdate(userId)
                 .orElseThrow(() -> new UserIdNotFoundException("User target not found."));
         user.assertCanRequestPasswordChange();
         PasswordRecoveryRequest request = requestManager.getOrCreate(user.getId(), now);

@@ -1,9 +1,9 @@
 package br.com.imarui.identity.authentication.core.application.service.bootstrap;
 
 import br.com.imarui.identity.identity.core.application.exceptions.user.RegistrationConflictException;
-import br.com.imarui.identity.identity.core.domain.model.User;
+import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.port.PasswordHasher;
-import br.com.imarui.identity.authentication.core.repository.UserRepository;
+import br.com.imarui.identity.identity.core.repository.UserRepository;
 import br.com.imarui.identity.shared.bootstrap.AdminBootstrapConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class DevelopmentAdminUserBootstrapService {
     public Long createAdminUserIfMissing() {
         return userRepository
                 .findByCpf(adminBootstrapConfig.cpf())
-                .map(User::getId)
+                .map(Identity::getId)
                 .orElseGet(
                         this::createAdminUserHandlingConcurrency
                 );
@@ -35,7 +35,7 @@ public class DevelopmentAdminUserBootstrapService {
         } catch (RegistrationConflictException exception) {
             return userRepository
                     .findByCpf(adminBootstrapConfig.cpf())
-                    .map(User::getId)
+                    .map(Identity::getId)
                     .orElseThrow(() -> exception);
         }
     }
@@ -48,7 +48,7 @@ public class DevelopmentAdminUserBootstrapService {
                         adminBootstrapConfig.password()
                 );
 
-        User user = User.create(
+        Identity user = Identity.create(
                 adminBootstrapConfig.name(),
                 adminBootstrapConfig.birthDate(),
                 adminBootstrapConfig.email(),
@@ -59,7 +59,7 @@ public class DevelopmentAdminUserBootstrapService {
                 now
         );
 
-        User savedUser =
+        Identity savedUser =
                 userRepository.create(user);
 
         return savedUser.getId();

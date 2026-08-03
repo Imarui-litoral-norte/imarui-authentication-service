@@ -6,9 +6,9 @@ import br.com.imarui.identity.authentication.core.application.exceptions.session
 import br.com.imarui.identity.identity.core.application.exceptions.user.UserDisabledException;
 import br.com.imarui.identity.identity.core.application.exceptions.user.UserIdNotFoundException;
 import br.com.imarui.identity.authentication.core.domain.model.Session;
-import br.com.imarui.identity.identity.core.domain.model.User;
+import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.repository.SessionRepository;
-import br.com.imarui.identity.authentication.core.repository.UserRepository;
+import br.com.imarui.identity.identity.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +37,7 @@ public class AccessTokenAuthenticationService {
             throw new SessionInvalidException("Session invalid.");
         }
 
-        User user = userRepository.findById(userId)
+        Identity user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserIdNotFoundException("User not found with this cpf."));
 
         if (!user.isActive()) {

@@ -2,7 +2,7 @@ package br.com.imarui.identity.authentication.infra.security.jwt;
 
 import br.com.imarui.identity.authentication.core.domain.model.IssuedAccessToken;
 import br.com.imarui.identity.authentication.core.domain.model.Session;
-import br.com.imarui.identity.identity.core.domain.model.User;
+import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.port.JwtService;
 import br.com.imarui.identity.platform.security.jwt.JwtProperties;
 import br.com.imarui.identity.platform.security.jwt.JwtSigningKeyProvider;
@@ -25,7 +25,7 @@ public class JwtServiceImpl implements JwtService {
     private final Clock clock;
 
     @Override
-    public IssuedAccessToken generateAccessToken(@NotNull User user, @NotNull Session session) {
+    public IssuedAccessToken generateAccessToken(@NotNull Identity user, @NotNull Session session) {
         Instant now = Instant.now(clock);
         Instant expiresAt = now.plusSeconds(jwtProperties.getAccessTokenExpirationSeconds());
 

@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.model;
 
-import br.com.imarui.identity.identity.core.domain.model.id.ProfilePhotoId;
+import br.com.imarui.identity.identity.core.domain.model.identity.ProfilePhotoId;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
