@@ -5,8 +5,8 @@ import br.com.imarui.identity.authentication.core.application.exceptions.login.P
 import br.com.imarui.identity.authentication.core.application.exceptions.login.PasswordRecoveryRequestNotFoundException;
 import br.com.imarui.identity.authentication.core.application.exceptions.session.SessionNotFoundException;
 import br.com.imarui.identity.authentication.core.application.exceptions.session.SessionUserMismatchException;
-import br.com.imarui.identity.identity.core.application.exceptions.user.UserIdNotFoundException;
-import br.com.imarui.identity.identity.core.application.exceptions.user.UserPasswordChangeNotRequiredException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.UserPasswordChangeNotRequiredException;
 import br.com.imarui.identity.authentication.core.application.result.AuthTokens;
 import br.com.imarui.identity.authentication.core.application.result.MeResult;
 import br.com.imarui.identity.authentication.core.application.result.login.AuthenticatedLoginResult;

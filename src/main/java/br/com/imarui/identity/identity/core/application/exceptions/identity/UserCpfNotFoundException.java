@@ -1,4 +1,4 @@
-package br.com.imarui.identity.identity.core.application.exceptions.user;
+package br.com.imarui.identity.identity.core.application.exceptions.identity;
 
 public class UserCpfNotFoundException extends RuntimeException {
 

@@ -1,7 +1,7 @@
 package br.com.imarui.identity.identity.core.application.service.user;
 
-import br.com.imarui.identity.identity.core.application.exceptions.user.RegistrationConflictException;
-import br.com.imarui.identity.identity.core.application.exceptions.user.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.RegistrationConflictException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
 import br.com.imarui.identity.authentication.core.application.result.AuthTokens;
 import br.com.imarui.identity.authentication.core.application.service.internal.TokenIssuanceService;
 import br.com.imarui.identity.identity.core.domain.model.identity.Identity;

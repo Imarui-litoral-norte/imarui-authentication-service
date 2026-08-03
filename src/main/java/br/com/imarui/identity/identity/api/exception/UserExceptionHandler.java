@@ -1,10 +1,10 @@
 package br.com.imarui.identity.identity.api.exception;
 
 import br.com.imarui.identity.authentication.core.application.exceptions.login.InvalidCredentialsException;
-import br.com.imarui.identity.identity.core.application.exceptions.user.RegistrationConflictException;
-import br.com.imarui.identity.identity.core.application.exceptions.user.UserCpfInvalidException;
-import br.com.imarui.identity.identity.core.application.exceptions.user.UserDisabledException;
-import br.com.imarui.identity.identity.core.application.exceptions.user.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.RegistrationConflictException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.UserCpfInvalidException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.UserDisabledException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
 import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityAlreadyDisabledException;
 import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityIdRequiredException;
 import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityNotDisabledException;

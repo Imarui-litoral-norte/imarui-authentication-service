@@ -1,12 +1,14 @@
 package br.com.imarui.identity.identity.core.domain.model.tenant;
 
 import br.com.imarui.identity.identity.core.domain.enums.tenant.TenantStatus;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.Objects;
 
+@Getter
 public final class Tenant {
 
     private final TenantId id;
@@ -46,12 +48,6 @@ public final class Tenant {
         validateState();
     }
 
-    /*
-     * Criação de um novo tenant.
-     *
-     * Todo tenant nasce pendente e precisa ser ativado
-     * antes de poder operar no IAM.
-     */
     public static Tenant create(
             @NotNull TenantId id,
             @NotNull TenantCode code,
@@ -94,12 +90,6 @@ public final class Tenant {
         );
     }
 
-    /*
-     * Primeira ativação do tenant.
-     *
-     * Transição permitida:
-     * PENDING -> ACTIVE
-     */
     public void activate(@NotNull Instant now) {
         Objects.requireNonNull(now, "now cannot be null");
         validateEventTime(now);
@@ -116,12 +106,6 @@ public final class Tenant {
         updatedAt = now;
     }
 
-    /*
-     * Desabilita um tenant ativo.
-     *
-     * Transição permitida:
-     * ACTIVE -> DISABLED
-     */
     public void disable(@NotNull Instant now) {
         Objects.requireNonNull(now, "now cannot be null");
         validateEventTime(now);
@@ -137,14 +121,6 @@ public final class Tenant {
         updatedAt = now;
     }
 
-    /*
-     * Reativa um tenant anteriormente desabilitado.
-     *
-     * Transição permitida:
-     * DISABLED -> ACTIVE
-     *
-     * activatedAt permanece com a data da primeira ativação.
-     */
     public void reactivate(@NotNull Instant now) {
         Objects.requireNonNull(now, "now cannot be null");
         validateEventTime(now);
@@ -196,9 +172,6 @@ public final class Tenant {
         return isActive();
     }
 
-    /*
-     * Protege a reconstrução contra estados inconsistentes.
-     */
     private void validateState() {
         if (updatedAt.isBefore(createdAt)) {
             throw new IllegalStateException(
@@ -300,43 +273,5 @@ public final class Tenant {
         }
     }
 
-    @NotNull
-    public TenantId getId() {
-        return id;
-    }
 
-    @NotNull
-    public TenantCode getCode() {
-        return code;
-    }
-
-    @NotNull
-    public TenantName getName() {
-        return name;
-    }
-
-    @NotNull
-    public TenantStatus getStatus() {
-        return status;
-    }
-
-    @NotNull
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    @NotNull
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    @Nullable
-    public Instant getActivatedAt() {
-        return activatedAt;
-    }
-
-    @Nullable
-    public Instant getDisabledAt() {
-        return disabledAt;
-    }
 }

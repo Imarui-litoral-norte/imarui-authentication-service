@@ -1,7 +1,7 @@
 package br.com.imarui.identity.authentication.core.application.service.refreshtoken;
 
 import br.com.imarui.identity.authentication.core.application.exceptions.refreshtoken.RefreshTokenNotFoundException;
-import br.com.imarui.identity.identity.core.application.exceptions.user.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
 import br.com.imarui.identity.authentication.core.application.result.admin.refresh.AdminRefreshTokenResult;
 import br.com.imarui.identity.authentication.core.domain.model.RefreshToken;
 import br.com.imarui.identity.authentication.core.repository.RefreshTokenRepository;

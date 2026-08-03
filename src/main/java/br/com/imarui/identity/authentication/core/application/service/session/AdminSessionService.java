@@ -1,7 +1,7 @@
 package br.com.imarui.identity.authentication.core.application.service.session;
 
 import br.com.imarui.identity.authentication.core.application.exceptions.session.SessionNotFoundException;
-import br.com.imarui.identity.identity.core.application.exceptions.user.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
 import br.com.imarui.identity.authentication.core.application.result.admin.session.AdminSessionResult;
 import br.com.imarui.identity.authentication.core.domain.model.Session;
 import br.com.imarui.identity.authentication.core.repository.SessionRepository;

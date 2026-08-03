@@ -1,4 +1,4 @@
-package br.com.imarui.identity.identity.api.controller;
+package br.com.imarui.identity.identity.api.controller.identity;
 
 import br.com.imarui.identity.authentication.api.http.dto.token.AuthTokenResponseDTO;
 import br.com.imarui.identity.identity.api.dto.user.UserRegistrationRequestDTO;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
         name = "Authentication - Users",
         description = "Operações públicas e administrativas para cadastro, consulta e gerenciamento de usuários."
 )
-public class UserController {
+public class IdentityController {
 
     private final UserService userService;
 

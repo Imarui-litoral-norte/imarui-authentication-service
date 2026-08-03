@@ -1,4 +1,4 @@
-package br.com.imarui.identity.identity.api.controller;
+package br.com.imarui.identity.identity.api.controller.identity;
 
 import br.com.imarui.identity.authentication.api.http.dto.admin.user.AdminUserResponseDTO;
 import br.com.imarui.identity.authentication.core.application.result.admin.user.AdminUserResult;
@@ -36,7 +36,7 @@ import java.util.List;
         name = "Authentication - Users",
         description = "Operações públicas e administrativas para cadastro, consulta e gerenciamento de usuários."
 )
-public class AdminUserController {
+public class AdminIdentityController {
 
     private final AdminUserService adminUserService;
 

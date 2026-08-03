@@ -1,6 +1,6 @@
 package br.com.imarui.identity.authentication.core.application.service.bootstrap;
 
-import br.com.imarui.identity.identity.core.application.exceptions.user.RegistrationConflictException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.RegistrationConflictException;
 import br.com.imarui.identity.identity.core.domain.model.identity.Identity;
 import br.com.imarui.identity.authentication.core.port.PasswordHasher;
 import br.com.imarui.identity.identity.core.repository.UserRepository;

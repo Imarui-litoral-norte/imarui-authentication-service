@@ -1,7 +1,7 @@
 package br.com.imarui.identity.authentication.core.application.service.passwordrecovery;
 
 import br.com.imarui.identity.authentication.core.application.exceptions.login.PasswordRecoveryRequestNotFoundException;
-import br.com.imarui.identity.identity.core.application.exceptions.user.UserIdNotFoundException;
+import br.com.imarui.identity.identity.core.application.exceptions.identity.UserIdNotFoundException;
 import br.com.imarui.identity.authentication.core.application.result.IssuedPasswordResetToken;
 import br.com.imarui.identity.authentication.core.application.result.IssuedTemporaryPassword;
 import br.com.imarui.identity.authentication.core.application.result.PasswordResetLinkAdminResult;
