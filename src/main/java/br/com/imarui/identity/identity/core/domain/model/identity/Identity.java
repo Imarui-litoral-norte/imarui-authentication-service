@@ -1,266 +1,273 @@
 package br.com.imarui.identity.identity.core.domain.model.identity;
 
-import br.com.imarui.identity.identity.core.domain.enums.user.IdentityKind;
-import br.com.imarui.identity.identity.core.domain.enums.user.UserStatus;
-import br.com.imarui.identity.identity.core.domain.exceptions.user.UserAlreadyDisabledException;
-import br.com.imarui.identity.identity.core.domain.exceptions.user.UserNotDisabledException;
-import br.com.imarui.identity.identity.core.domain.exceptions.user.UserNowInstantRequiredException;
-import br.com.imarui.identity.identity.core.domain.model.*;
-import br.com.imarui.identity.identity.core.domain.model.affiliation.Affiliation;
+import br.com.imarui.identity.identity.core.domain.enums.identity.IdentityKind;
+import br.com.imarui.identity.identity.core.domain.enums.identity.IdentityStatus;
+import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityAlreadyActiveException;
+import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityAlreadyDisabledException;
+import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityNotDisabledException;
+import br.com.imarui.identity.identity.core.domain.exceptions.identity.InvalidIdentityStateException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
-public class Identity {
+public abstract class Identity {
 
     private final IdentityId id;
-
-    private FullName name;
-    private LocalDate birthDate;
-
-    private Set<IdentityEmail> emails;
-    private IdentityPhoneNumber phoneNumber;
-    private ProfilePhoto profilePhoto;
-
-    private UserStatus status;
-    private final IdentityKind kind;
-
-    private Set<Affiliation> affiliations;
-
+    private IdentityEmail primaryEmail;
+    private IdentityStatus status;
     private final Instant createdAt;
     private Instant updatedAt;
+    private Instant activatedAt;
     private Instant disabledAt;
 
-    private Identity(
+    protected Identity(
             IdentityId id,
-            FullName name,
-            LocalDate birthDate,
-            Set<IdentityEmail> emails,
-            IdentityPhoneNumber phoneNumber,
-            ProfilePhoto profilePhoto,
-            UserStatus status,
-            IdentityKind kind,
-            Set<Affiliation> affiliations,
+            IdentityEmail primaryEmail,
+            IdentityStatus status,
             Instant createdAt,
             Instant updatedAt,
+            Instant activatedAt,
             Instant disabledAt
     ) {
-        this.id = id;
-        this.name = name;
-        this.birthDate = birthDate;
-        this.emails = emails;
-        this.phoneNumber = phoneNumber;
-        this.profilePhoto = profilePhoto;
-        this.status = status;
-        this.kind = kind;
-        this.affiliations = affiliations;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.id = Objects.requireNonNull(
+                id,
+                "id cannot be null"
+        );
+
+        this.primaryEmail = Objects.requireNonNull(
+                primaryEmail,
+                "primaryEmail cannot be null"
+        );
+
+        this.status = Objects.requireNonNull(
+                status,
+                "status cannot be null"
+        );
+
+        this.createdAt = Objects.requireNonNull(
+                createdAt,
+                "createdAt cannot be null"
+        );
+
+        this.updatedAt = Objects.requireNonNull(
+                updatedAt,
+                "updatedAt cannot be null"
+        );
+
+        this.activatedAt = activatedAt;
         this.disabledAt = disabledAt;
+
+        validateState();
     }
 
-    /**
-     * Cria uma nova identidade pendente de ativação.
-     *
-     * @param id           identificador da identidade
-     * @param name         nome da pessoa ou serviço
-     * @param birthDate    data de nascimento, quando aplicável
-     * @param primaryEmail e-mail principal da identidade
-     * @param phoneNumber  telefone da identidade, quando aplicável
-     * @param kind         natureza da identidade
-     * @param now          instante da criação
-     * @return nova identidade pendente
-     */
-    public static Identity create(
-            @NotNull IdentityId id,
-            @NotNull FullName name,
-            LocalDate birthDate,
-            @NotNull IdentityEmail primaryEmail,
-            IdentityPhoneNumber phoneNumber,
-            @NotNull IdentityKind kind,
-            @NotNull Instant now
-    ) {
-        Objects.requireNonNull(id, "id cannot be null");
-        Objects.requireNonNull(name, "name cannot be null");
-        Objects.requireNonNull(primaryEmail, "primaryEmail cannot be null");
-        Objects.requireNonNull(kind, "kind cannot be null");
+    @NotNull
+    public abstract IdentityKind getKind();
 
-        validateNow(now);
-
-        Set<IdentityEmail> emails = new HashSet<>();
-        emails.add(primaryEmail);
-
-        return new Identity(
-                id,
-                name,
-                birthDate,
-                emails,
-                phoneNumber,
-                null,
-                UserStatus.PENDING,
-                kind,
-                new HashSet<>(),
-                now,
-                now,
-                null
-        );
+    public final boolean isPending() {
+        return status == IdentityStatus.PENDING;
     }
 
-    /**
-     * Reconstitui uma identidade previamente persistida.
-     *
-     * <p>Este método não representa a criação de uma nova identidade e,
-     * portanto, preserva os estados e instantes armazenados.</p>
-     */
-    public static Identity reconstitute(
-            @NotNull IdentityId id,
-            @NotNull FullName name,
-            LocalDate birthDate,
-            @NotNull Set<IdentityEmail> emails,
-            IdentityPhoneNumber phoneNumber,
-            ProfilePhoto profilePhoto,
-            @NotNull UserStatus status,
-            @NotNull IdentityKind kind,
-            @NotNull Set<Affiliation> affiliations,
-            @NotNull Instant createdAt,
-            @NotNull Instant updatedAt,
-            Instant disabledAt
-    ) {
-        Objects.requireNonNull(id, "id cannot be null");
-        Objects.requireNonNull(name, "name cannot be null");
-        Objects.requireNonNull(emails, "emails cannot be null");
-        Objects.requireNonNull(status, "status cannot be null");
-        Objects.requireNonNull(kind, "kind cannot be null");
-        Objects.requireNonNull(affiliations, "affiliations cannot be null");
-        Objects.requireNonNull(createdAt, "createdAt cannot be null");
-        Objects.requireNonNull(updatedAt, "updatedAt cannot be null");
-
-        validateReconstitutedState(
-                emails,
-                status,
-                createdAt,
-                updatedAt,
-                disabledAt
-        );
-
-        return new Identity(
-                id,
-                name,
-                birthDate,
-                new HashSet<>(emails),
-                phoneNumber,
-                profilePhoto,
-                status,
-                kind,
-                new HashSet<>(affiliations),
-                createdAt,
-                updatedAt,
-                disabledAt
-        );
+    public final boolean isActive() {
+        return status == IdentityStatus.ACTIVE;
     }
 
-    public boolean isPending() {
-        return status == UserStatus.PENDING;
+    public final boolean isDisabled() {
+        return status == IdentityStatus.DISABLED;
     }
 
-    public boolean isActive() {
-        return status == UserStatus.ACTIVE;
-    }
 
-    public boolean isDisabled() {
-        return status == UserStatus.DISABLED;
-    }
+    public final void activate(@NotNull Instant now) {
+        Objects.requireNonNull(now, "now cannot be null");
+        validateEventTime(now);
 
-    public void activate(@NotNull Instant now) {
-        validateNow(now);
-
-        if (isActive()) {
-            return;
-        }
-
-        if (isDisabled()) {
-            throw new IllegalStateException(
-                    "A disabled user cannot be activated directly."
+        if (!isPending()) {
+            throw new IdentityAlreadyActiveException(
+                    id.toString()
             );
         }
 
-        status = UserStatus.ACTIVE;
-        updatedAt = now;
-    }
-
-    public void disable(@NotNull Instant now) {
-        validateNow(now);
-
-        if (isDisabled()) {
-            throw new UserAlreadyDisabledException(id.toString());
-        }
-
-        status = UserStatus.DISABLED;
-        disabledAt = now;
-        updatedAt = now;
-    }
-
-    public void reactivate(@NotNull Instant now) {
-        validateNow(now);
-
-        if (!isDisabled()) {
-            throw new UserNotDisabledException(id.toString());
-        }
-
-        status = UserStatus.ACTIVE;
+        status = IdentityStatus.ACTIVE;
+        activatedAt = now;
         disabledAt = null;
         updatedAt = now;
     }
 
-    private static void validateReconstitutedState(
-            Set<IdentityEmail> emails,
-            UserStatus status,
-            Instant createdAt,
-            Instant updatedAt,
-            Instant disabledAt
+    public final void disable(@NotNull Instant now) {
+        Objects.requireNonNull(now, "now cannot be null");
+        validateEventTime(now);
+
+        if (isDisabled()) {
+            throw new IdentityAlreadyDisabledException(
+                    id.toString()
+            );
+        }
+
+        if (!isActive()) {
+            throw new IllegalStateException(
+                    "Only an active identity can be disabled."
+            );
+        }
+
+        status = IdentityStatus.DISABLED;
+        disabledAt = now;
+        updatedAt = now;
+    }
+
+    public final void reactivate(@NotNull Instant now) {
+        Objects.requireNonNull(now, "now cannot be null");
+        validateEventTime(now);
+
+        if (!isDisabled()) {
+            throw new IdentityNotDisabledException(
+                    id.toString()
+            );
+        }
+
+        status = IdentityStatus.ACTIVE;
+        disabledAt = null;
+        updatedAt = now;
+    }
+
+
+    public final void changePrimaryEmail(
+            @NotNull IdentityEmail newPrimaryEmail,
+            @NotNull Instant now
     ) {
-        if (emails.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "user must have at least one email"
-            );
+        Objects.requireNonNull(
+                newPrimaryEmail,
+                "newPrimaryEmail cannot be null"
+        );
+
+        Objects.requireNonNull(
+                now,
+                "now cannot be null"
+        );
+
+        validateEventTime(now);
+
+        if (primaryEmail.equals(newPrimaryEmail)) {
+            return;
         }
 
+        primaryEmail = newPrimaryEmail;
+        updatedAt = now;
+    }
+
+    protected final void registerChange(@NotNull Instant now) {
+        Objects.requireNonNull(now, "now cannot be null");
+        validateEventTime(now);
+
+        updatedAt = now;
+    }
+
+    private void validateState() {
         if (updatedAt.isBefore(createdAt)) {
-            throw new IllegalArgumentException(
-                    "updatedAt cannot be before createdAt"
+            throw new InvalidIdentityStateException(
+                    "updatedAt cannot be before createdAt."
             );
         }
 
-        if (status == UserStatus.DISABLED && disabledAt == null) {
-            throw new IllegalArgumentException(
-                    "disabled user must have disabledAt"
-            );
-        }
-
-        if (status != UserStatus.DISABLED && disabledAt != null) {
-            throw new IllegalArgumentException(
-                    "non-disabled user cannot have disabledAt"
+        if (activatedAt != null && activatedAt.isBefore(createdAt)) {
+            throw new InvalidIdentityStateException(
+                    "activatedAt cannot be before createdAt."
             );
         }
 
         if (disabledAt != null && disabledAt.isBefore(createdAt)) {
-            throw new IllegalArgumentException(
-                    "disabledAt cannot be before createdAt"
+            throw new InvalidIdentityStateException(
+                    "disabledAt cannot be before createdAt."
+            );
+        }
+
+        if (activatedAt != null && activatedAt.isAfter(updatedAt)) {
+            throw new InvalidIdentityStateException(
+                    "activatedAt cannot be after updatedAt."
+            );
+        }
+
+        if (disabledAt != null && disabledAt.isAfter(updatedAt)) {
+            throw new InvalidIdentityStateException(
+                    "disabledAt cannot be after updatedAt."
+            );
+        }
+
+        if (
+                activatedAt != null
+                        && disabledAt != null
+                        && disabledAt.isBefore(activatedAt)
+        ) {
+            throw new InvalidIdentityStateException(
+                    "disabledAt cannot be before activatedAt."
+            );
+        }
+
+        switch (status) {
+            case PENDING -> validatePendingState();
+            case ACTIVE -> validateActiveState();
+            case DISABLED -> validateDisabledState();
+        }
+    }
+
+    private void validatePendingState() {
+        if (activatedAt != null) {
+            throw new InvalidIdentityStateException(
+                    "A pending identity cannot have activatedAt."
+            );
+        }
+
+        if (disabledAt != null) {
+            throw new InvalidIdentityStateException(
+                    "A pending identity cannot have disabledAt."
             );
         }
     }
 
-    private static void validateNow(Instant now) {
-        if (now == null) {
-            throw new UserNowInstantRequiredException(
-                    "now is required."
+    private void validateActiveState() {
+        if (activatedAt == null) {
+            throw new InvalidIdentityStateException(
+                    "An active identity must have activatedAt."
+            );
+        }
+
+        if (disabledAt != null) {
+            throw new InvalidIdentityStateException(
+                    "An active identity cannot have disabledAt."
             );
         }
     }
+
+    private void validateDisabledState() {
+        if (activatedAt == null) {
+            throw new InvalidIdentityStateException(
+                    "A disabled identity must have activatedAt."
+            );
+        }
+
+        if (disabledAt == null) {
+            throw new InvalidIdentityStateException(
+                    "A disabled identity must have disabledAt."
+            );
+        }
+    }
+
+    private void validateEventTime(Instant now) {
+        if (now.isBefore(updatedAt)) {
+            throw new IllegalArgumentException(
+                    "Event time cannot be before updatedAt."
+            );
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 }

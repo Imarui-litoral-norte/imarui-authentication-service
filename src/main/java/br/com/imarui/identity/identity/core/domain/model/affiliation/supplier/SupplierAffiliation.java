@@ -1,7 +1,9 @@
-package br.com.imarui.identity.identity.core.domain.model.affiliation;
+package br.com.imarui.identity.identity.core.domain.model.affiliation.supplier;
 
 import br.com.imarui.identity.identity.core.domain.enums.affiliation.AffiliationStatus;
 import br.com.imarui.identity.identity.core.domain.enums.affiliation.AffiliationType;
+import br.com.imarui.identity.identity.core.domain.model.affiliation.Affiliation;
+import br.com.imarui.identity.identity.core.domain.model.affiliation.AffiliationId;
 import br.com.imarui.identity.identity.core.domain.model.identity.IdentityId;
 import br.com.imarui.identity.identity.core.domain.model.tenant.TenantId;
 import org.jetbrains.annotations.NotNull;
@@ -10,32 +12,41 @@ import org.jetbrains.annotations.Nullable;
 import java.time.Instant;
 import java.util.Objects;
 
-public final class ExternalAffiliation extends Affiliation {
+public final class SupplierAffiliation extends Affiliation {
 
-    private ExternalAffiliation(
+    private final SupplierCode supplierCode;
+
+    private SupplierAffiliation(
             AffiliationId id,
             TenantId tenantId,
             IdentityId identityId,
+            SupplierCode supplierCode,
             AffiliationStatus status,
             Instant startedAt,
             Instant updatedAt,
             Instant endedAt
     ) {
         super(id, tenantId, identityId, status, startedAt, updatedAt, endedAt);
+        this.supplierCode = Objects.requireNonNull(
+                supplierCode,
+                "supplierCode cannot be null"
+        );
     }
 
-    public static ExternalAffiliation create(
+    public static SupplierAffiliation create(
             @NotNull AffiliationId id,
             @NotNull TenantId tenantId,
             @NotNull IdentityId identityId,
+            @NotNull SupplierCode supplierCode,
             @NotNull Instant now
     ) {
         Objects.requireNonNull(now, "now cannot be null");
 
-        return new ExternalAffiliation(
+        return new SupplierAffiliation(
                 id,
                 tenantId,
                 identityId,
+                supplierCode,
                 AffiliationStatus.ACTIVE,
                 now,
                 now,
@@ -43,19 +54,21 @@ public final class ExternalAffiliation extends Affiliation {
         );
     }
 
-    public static ExternalAffiliation reconstitute(
+    public static SupplierAffiliation reconstitute(
             @NotNull AffiliationId id,
             @NotNull TenantId tenantId,
             @NotNull IdentityId identityId,
+            @NotNull SupplierCode supplierCode,
             @NotNull AffiliationStatus status,
             @NotNull Instant startedAt,
             @NotNull Instant updatedAt,
             @Nullable Instant endedAt
     ) {
-        return new ExternalAffiliation(
+        return new SupplierAffiliation(
                 id,
                 tenantId,
                 identityId,
+                supplierCode,
                 status,
                 startedAt,
                 updatedAt,
@@ -65,6 +78,10 @@ public final class ExternalAffiliation extends Affiliation {
 
     @Override
     public @NotNull AffiliationType getType() {
-        return AffiliationType.EXTERNAL;
+        return AffiliationType.SUPPLIER;
+    }
+
+    public @NotNull SupplierCode getSupplierCode() {
+        return supplierCode;
     }
 }

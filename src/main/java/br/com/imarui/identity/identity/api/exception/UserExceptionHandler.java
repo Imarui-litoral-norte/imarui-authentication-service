@@ -5,10 +5,10 @@ import br.com.imarui.identity.identity.core.application.exceptions.user.Registra
 import br.com.imarui.identity.identity.core.application.exceptions.user.UserCpfInvalidException;
 import br.com.imarui.identity.identity.core.application.exceptions.user.UserDisabledException;
 import br.com.imarui.identity.identity.core.application.exceptions.user.UserIdNotFoundException;
-import br.com.imarui.identity.identity.core.domain.exceptions.user.UserAlreadyDisabledException;
-import br.com.imarui.identity.identity.core.domain.exceptions.user.UserIdRequiredException;
-import br.com.imarui.identity.identity.core.domain.exceptions.user.UserNotDisabledException;
-import br.com.imarui.identity.identity.core.domain.exceptions.user.UserNowInstantRequiredException;
+import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityAlreadyDisabledException;
+import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityIdRequiredException;
+import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityNotDisabledException;
+import br.com.imarui.identity.identity.core.domain.exceptions.identity.IdentityNowInstantRequiredException;
 import br.com.imarui.identity.platform.web.exception.ApiErrorResponse;
 import br.com.imarui.identity.platform.web.exception.ApiExceptionHandler;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(basePackages = "br.com.imarui.authentication")
 public class UserExceptionHandler extends ApiExceptionHandler {
 
-    @ExceptionHandler(UserIdRequiredException.class)
-    public ResponseEntity<ApiErrorResponse> handleUserIdRequired(UserIdRequiredException exception) {
+    @ExceptionHandler(IdentityIdRequiredException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserIdRequired(IdentityIdRequiredException exception) {
         return buildErrorResponse(
                 "USER_ID_REQUIRED",
                 exception.getMessage(),
@@ -28,8 +28,8 @@ public class UserExceptionHandler extends ApiExceptionHandler {
         );
     }
 
-    @ExceptionHandler(UserNowInstantRequiredException.class)
-    public ResponseEntity<ApiErrorResponse> handleUserNowInstantRequired(UserNowInstantRequiredException exception) {
+    @ExceptionHandler(IdentityNowInstantRequiredException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserNowInstantRequired(IdentityNowInstantRequiredException exception) {
         return buildErrorResponse(
                 "USER_NOW_INSTANT_REQUIRED",
                 exception.getMessage(),
@@ -64,9 +64,9 @@ public class UserExceptionHandler extends ApiExceptionHandler {
         );
     }
 
-    @ExceptionHandler(UserAlreadyDisabledException.class)
+    @ExceptionHandler(IdentityAlreadyDisabledException.class)
     public ResponseEntity<ApiErrorResponse> handleUserAlreadyDisabled(
-            UserAlreadyDisabledException exception
+            IdentityAlreadyDisabledException exception
     ) {
         return buildErrorResponse(
                 "USER_ALREADY_DISABLED",
@@ -75,9 +75,9 @@ public class UserExceptionHandler extends ApiExceptionHandler {
         );
     }
 
-    @ExceptionHandler(UserNotDisabledException.class)
+    @ExceptionHandler(IdentityNotDisabledException.class)
     public ResponseEntity<ApiErrorResponse> handleUserNotDisabled(
-            UserNotDisabledException exception
+            IdentityNotDisabledException exception
     ) {
         return buildErrorResponse(
                 "USER_NOT_DISABLED",

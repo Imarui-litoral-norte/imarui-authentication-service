@@ -2,7 +2,6 @@ package br.com.imarui.identity.identity.core.domain.model.affiliation;
 
 import br.com.imarui.identity.identity.core.domain.enums.affiliation.AffiliationStatus;
 import br.com.imarui.identity.identity.core.domain.enums.affiliation.AffiliationType;
-import br.com.imarui.identity.identity.core.domain.model.affiliation.code.AffiliationId;
 import br.com.imarui.identity.identity.core.domain.model.identity.IdentityId;
 import br.com.imarui.identity.identity.core.domain.model.tenant.TenantId;
 import org.jetbrains.annotations.NotNull;

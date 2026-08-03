@@ -6,7 +6,6 @@ import br.com.imarui.identity.identity.core.domain.exceptions.affiliation.Affili
 import br.com.imarui.identity.identity.core.domain.exceptions.affiliation.AffiliationAlreadyInactiveException;
 import br.com.imarui.identity.identity.core.domain.exceptions.affiliation.AffiliationEndBeforeStartException;
 import br.com.imarui.identity.identity.core.domain.exceptions.affiliation.InvalidAffiliationStateException;
-import br.com.imarui.identity.identity.core.domain.model.affiliation.code.AffiliationId;
 import br.com.imarui.identity.identity.core.domain.model.identity.IdentityId;
 import br.com.imarui.identity.identity.core.domain.model.tenant.TenantId;
 import lombok.Getter;
