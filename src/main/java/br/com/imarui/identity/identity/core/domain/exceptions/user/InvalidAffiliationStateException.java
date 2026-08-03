@@ -1,6 +1,6 @@
 package br.com.imarui.identity.identity.core.domain.exceptions.user;
 
-import br.com.imarui.identity.identity.core.domain.enums.user.AffiliationStatus;
+import br.com.imarui.identity.identity.core.domain.enums.affiliation.AffiliationStatus;
 
 import java.time.Instant;
 

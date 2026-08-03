@@ -1,4 +1,4 @@
-package br.com.imarui.identity.identity.core.domain.enums.user;
+package br.com.imarui.identity.identity.core.domain.enums.affiliation;
 
 /**
  * Define os tipos de vínculo que uma pessoa pode possuir com uma organização.
@@ -32,6 +32,8 @@ public enum AffiliationType {
      */
     CUSTOMER,
 
+    PARTNER,
+
     /**
      * Indica que a pessoa está vinculada a uma organização fornecedora.
      *
@@ -53,5 +55,5 @@ public enum AffiliationType {
      * Conceitos como SPOT, frota fixa ou veículo agregado devem ser tratados
      * em outro contexto do domínio, como contrato, operação ou transporte.</p>
      */
-    CARRIER
+    EXTERNAL
 }

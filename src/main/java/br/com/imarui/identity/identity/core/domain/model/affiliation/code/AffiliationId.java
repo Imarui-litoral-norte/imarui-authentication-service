@@ -1,4 +1,4 @@
-package br.com.imarui.identity.identity.core.domain.model.affiliation;
+package br.com.imarui.identity.identity.core.domain.model.affiliation.code;
 
 import org.jetbrains.annotations.NotNull;
 
