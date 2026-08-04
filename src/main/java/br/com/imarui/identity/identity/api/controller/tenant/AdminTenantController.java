@@ -3,9 +3,7 @@ package br.com.imarui.identity.identity.api.controller.tenant;
 import br.com.imarui.identity.identity.api.dto.tenant.request.CreateTenantRequest;
 import br.com.imarui.identity.identity.api.dto.tenant.request.RenameTenantRequest;
 import br.com.imarui.identity.identity.api.dto.tenant.response.TenantResponse;
-import br.com.imarui.identity.identity.core.application.command.tenant.ActivateTenantCommand;
-import br.com.imarui.identity.identity.core.application.command.tenant.CreateTenantCommand;
-import br.com.imarui.identity.identity.core.application.command.tenant.RenameTenantCommand;
+import br.com.imarui.identity.identity.core.application.command.tenant.*;
 import br.com.imarui.identity.identity.core.application.result.tenant.TenantResult;
 import br.com.imarui.identity.identity.core.application.usecase.tenant.*;
 import br.com.imarui.identity.identity.core.domain.model.tenant.TenantId;
@@ -67,9 +65,11 @@ public class AdminTenantController {
     public ResponseEntity<TenantResponse> disable(
             @PathVariable String tenantId
     ) {
-        TenantId id = TenantId.from(tenantId);
+        DisableTenantCommand command = new DisableTenantCommand(
+                TenantId.from(tenantId)
+        );
 
-        TenantResult result = disableTenantUseCase.execute(id);
+        TenantResult result = disableTenantUseCase.execute(command);
 
         return ResponseEntity.ok(
                 TenantResponse.from(result)
@@ -80,9 +80,9 @@ public class AdminTenantController {
     public ResponseEntity<TenantResponse> reactivate(
             @PathVariable String tenantId
     ) {
-        TenantId id = TenantId.from(tenantId);
+        ReactivateTenantCommand command = new ReactivateTenantCommand(TenantId.from(tenantId));
 
-        TenantResult result = reactivateTenantUseCase.execute(id);
+        TenantResult result = reactivateTenantUseCase.execute(command);
 
         return ResponseEntity.ok(
                 TenantResponse.from(result)
