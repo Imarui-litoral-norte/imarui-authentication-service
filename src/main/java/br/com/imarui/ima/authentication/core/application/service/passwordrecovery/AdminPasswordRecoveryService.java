@@ -26,7 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminPasswordRecoveryService {
 
-    private final UserRepository userRepository;
     private final PasswordRecoveryRequestRepository requestRepository;
     private final PasswordRecoveryRequestManager requestManager;
     private final TemporaryPasswordIssuer passwordIssuer;

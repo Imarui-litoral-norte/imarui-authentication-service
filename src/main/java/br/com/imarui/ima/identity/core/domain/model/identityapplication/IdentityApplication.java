@@ -1,0 +1,432 @@
+package br.com.imarui.ima.identity.core.domain.model.identityapplication;
+
+import br.com.imarui.ima.identity.core.domain.enums.identityapplication.IdentityApplicationStatus;
+import br.com.imarui.ima.identity.core.domain.exception.identityapplication.IdentityApplicationReviewNotAllowedException;
+import br.com.imarui.ima.identity.core.domain.exception.identityapplication.InvalidIdentityApplicationStateException;
+import br.com.imarui.ima.identity.core.domain.model.affiliation.AffiliationId;
+import br.com.imarui.ima.identity.core.domain.model.identity.Email;
+import br.com.imarui.ima.identity.core.domain.model.identity.IdentityFullName;
+import br.com.imarui.ima.identity.core.domain.model.identity.IdentityId;
+import br.com.imarui.ima.identity.core.domain.model.identity.PhoneNumber;
+import br.com.imarui.ima.identity.core.domain.model.identity.person.Cpf;
+import br.com.imarui.ima.identity.core.domain.model.tenant.TenantId;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.time.Instant;
+import java.util.Objects;
+
+@Getter
+public final class IdentityApplication {
+
+    private static final int MAX_REJECTION_REASON_LENGTH = 500;
+
+    private final IdentityApplicationId id;
+    private final IdentityFullName fullName;
+    private final Cpf cpf;
+    private final Email email;
+    private final PhoneNumber phoneNumber;
+
+    private IdentityApplicationStatus status;
+
+    private final Instant requestedAt;
+    private Instant reviewedAt;
+
+    private ReviewerId reviewedBy;
+    private String rejectionReason;
+
+    private IdentityId resolvedIdentityId;
+    private TenantId assignedTenantId;
+    private AffiliationId resultingAffiliationId;
+
+    private IdentityApplication(
+            IdentityApplicationId id,
+            IdentityFullName fullName,
+            Cpf cpf,
+            Email email,
+            PhoneNumber phoneNumber,
+            IdentityApplicationStatus status,
+            Instant requestedAt,
+            Instant reviewedAt,
+            ReviewerId reviewedBy,
+            String rejectionReason,
+            IdentityId resolvedIdentityId,
+            TenantId assignedTenantId,
+            AffiliationId resultingAffiliationId
+    ) {
+        this.id = Objects.requireNonNull(
+                id,
+                "id cannot be null"
+        );
+
+        this.fullName = Objects.requireNonNull(
+                fullName,
+                "fullName cannot be null"
+        );
+
+        this.cpf = Objects.requireNonNull(
+                cpf,
+                "cpf cannot be null"
+        );
+
+        this.email = Objects.requireNonNull(
+                email,
+                "email cannot be null"
+        );
+
+        this.phoneNumber = Objects.requireNonNull(
+                phoneNumber,
+                "phoneNumber cannot be null"
+        );
+
+        this.status = Objects.requireNonNull(
+                status,
+                "status cannot be null"
+        );
+
+        this.requestedAt = Objects.requireNonNull(
+                requestedAt,
+                "requestedAt cannot be null"
+        );
+
+        this.reviewedAt = reviewedAt;
+        this.reviewedBy = reviewedBy;
+        this.rejectionReason =
+                normalizeRejectionReason(rejectionReason);
+
+        this.resolvedIdentityId = resolvedIdentityId;
+        this.assignedTenantId = assignedTenantId;
+        this.resultingAffiliationId = resultingAffiliationId;
+
+        validateState();
+    }
+
+    public static IdentityApplication create(
+            @NotNull IdentityApplicationId id,
+            @NotNull IdentityFullName fullName,
+            @NotNull Cpf cpf,
+            @NotNull Email email,
+            @NotNull PhoneNumber phoneNumber,
+            @NotNull Instant now
+    ) {
+        Objects.requireNonNull(now, "now cannot be null");
+
+        return new IdentityApplication(
+                id,
+                fullName,
+                cpf,
+                email,
+                phoneNumber,
+                IdentityApplicationStatus.PENDING,
+                now,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    public static IdentityApplication reconstitute(
+            @NotNull IdentityApplicationId id,
+            @NotNull IdentityFullName fullName,
+            @NotNull Cpf cpf,
+            @NotNull Email email,
+            @NotNull PhoneNumber phoneNumber,
+            @NotNull IdentityApplicationStatus status,
+            @NotNull Instant requestedAt,
+            @Nullable Instant reviewedAt,
+            @Nullable ReviewerId reviewedBy,
+            @Nullable String rejectionReason,
+            @Nullable IdentityId resolvedIdentityId,
+            @Nullable TenantId assignedTenantId,
+            @Nullable AffiliationId resultingAffiliationId
+    ) {
+        return new IdentityApplication(
+                id,
+                fullName,
+                cpf,
+                email,
+                phoneNumber,
+                status,
+                requestedAt,
+                reviewedAt,
+                reviewedBy,
+                rejectionReason,
+                resolvedIdentityId,
+                assignedTenantId,
+                resultingAffiliationId
+        );
+    }
+
+    public void approve(
+            @NotNull ReviewerId reviewedBy,
+            @NotNull IdentityId resolvedIdentityId,
+            @NotNull TenantId assignedTenantId,
+            @NotNull AffiliationId resultingAffiliationId,
+            @NotNull Instant now
+    ) {
+        Objects.requireNonNull(
+                reviewedBy,
+                "reviewedBy cannot be null"
+        );
+
+        Objects.requireNonNull(
+                resolvedIdentityId,
+                "resolvedIdentityId cannot be null"
+        );
+
+        Objects.requireNonNull(
+                assignedTenantId,
+                "assignedTenantId cannot be null"
+        );
+
+        Objects.requireNonNull(
+                resultingAffiliationId,
+                "resultingAffiliationId cannot be null"
+        );
+
+        Objects.requireNonNull(
+                now,
+                "now cannot be null"
+        );
+
+        validateEventTime(now);
+        validateCanBeReviewed();
+
+        status = IdentityApplicationStatus.APPROVED;
+        reviewedAt = now;
+        this.reviewedBy = reviewedBy;
+
+        rejectionReason = null;
+
+        this.resolvedIdentityId = resolvedIdentityId;
+        this.assignedTenantId = assignedTenantId;
+        this.resultingAffiliationId = resultingAffiliationId;
+
+        validateState();
+    }
+
+    public void reject(
+            @NotNull ReviewerId reviewedBy,
+            @NotNull String rejectionReason,
+            @NotNull Instant now
+    ) {
+        Objects.requireNonNull(
+                reviewedBy,
+                "reviewedBy cannot be null"
+        );
+
+        Objects.requireNonNull(
+                rejectionReason,
+                "rejectionReason cannot be null"
+        );
+
+        Objects.requireNonNull(
+                now,
+                "now cannot be null"
+        );
+
+        String normalizedRejectionReason =
+                normalizeRejectionReason(rejectionReason);
+
+        validateEventTime(now);
+        validateCanBeReviewed();
+
+        status = IdentityApplicationStatus.REJECTED;
+        reviewedAt = now;
+        this.reviewedBy = reviewedBy;
+        this.rejectionReason = normalizedRejectionReason;
+
+        resolvedIdentityId = null;
+        assignedTenantId = null;
+        resultingAffiliationId = null;
+
+        validateState();
+    }
+
+    public boolean isPending() {
+        return status == IdentityApplicationStatus.PENDING;
+    }
+
+    public boolean isApproved() {
+        return status == IdentityApplicationStatus.APPROVED;
+    }
+
+    public boolean isRejected() {
+        return status == IdentityApplicationStatus.REJECTED;
+    }
+
+    private void validateCanBeReviewed() {
+        if (!isPending()) {
+            throw new IdentityApplicationReviewNotAllowedException(
+                    id,
+                    status
+            );
+        }
+    }
+
+    private void validateEventTime(Instant now) {
+        if (now.isBefore(requestedAt)) {
+            throw new IllegalArgumentException(
+                    "Review time cannot be before requestedAt."
+            );
+        }
+    }
+
+    private void validateState() {
+        if (
+                reviewedAt != null
+                        && reviewedAt.isBefore(requestedAt)
+        ) {
+            throw new InvalidIdentityApplicationStateException(
+                    "reviewedAt cannot be before requestedAt."
+            );
+        }
+
+        switch (status) {
+            case PENDING -> validatePendingState();
+            case APPROVED -> validateApprovedState();
+            case REJECTED -> validateRejectedState();
+        }
+    }
+
+    private void validatePendingState() {
+        requireState(
+                reviewedAt == null,
+                "A pending application cannot have reviewedAt."
+        );
+
+        requireState(
+                reviewedBy == null,
+                "A pending application cannot have reviewedBy."
+        );
+
+        requireState(
+                rejectionReason == null,
+                "A pending application cannot have rejectionReason."
+        );
+
+        requireState(
+                resolvedIdentityId == null,
+                "A pending application cannot have resolvedIdentityId."
+        );
+
+        requireState(
+                assignedTenantId == null,
+                "A pending application cannot have assignedTenantId."
+        );
+
+        requireState(
+                resultingAffiliationId == null,
+                "A pending application cannot have resultingAffiliationId."
+        );
+    }
+
+    private void validateApprovedState() {
+        requireState(
+                reviewedAt != null,
+                "An approved application must have reviewedAt."
+        );
+
+        requireState(
+                reviewedBy != null,
+                "An approved application must have reviewedBy."
+        );
+
+        requireState(
+                rejectionReason == null,
+                "An approved application cannot have rejectionReason."
+        );
+
+        requireState(
+                resolvedIdentityId != null,
+                "An approved application must have resolvedIdentityId."
+        );
+
+        requireState(
+                assignedTenantId != null,
+                "An approved application must have assignedTenantId."
+        );
+
+        requireState(
+                resultingAffiliationId != null,
+                "An approved application must have resultingAffiliationId."
+        );
+    }
+
+    private void validateRejectedState() {
+        requireState(
+                reviewedAt != null,
+                "A rejected application must have reviewedAt."
+        );
+
+        requireState(
+                reviewedBy != null,
+                "A rejected application must have reviewedBy."
+        );
+
+        requireState(
+                rejectionReason != null,
+                "A rejected application must have rejectionReason."
+        );
+
+        requireState(
+                resolvedIdentityId == null,
+                "A rejected application cannot have resolvedIdentityId."
+        );
+
+        requireState(
+                assignedTenantId == null,
+                "A rejected application cannot have assignedTenantId."
+        );
+
+        requireState(
+                resultingAffiliationId == null,
+                "A rejected application cannot have resultingAffiliationId."
+        );
+    }
+
+    private static String normalizeRejectionReason(
+            String rejectionReason
+    ) {
+        if (rejectionReason == null) {
+            return null;
+        }
+
+        String normalizedRejectionReason =
+                rejectionReason.trim();
+
+        if (normalizedRejectionReason.isBlank()) {
+            throw new InvalidIdentityApplicationStateException(
+                    "rejectionReason cannot be blank."
+            );
+        }
+
+        if (
+                normalizedRejectionReason.length()
+                        > MAX_REJECTION_REASON_LENGTH
+        ) {
+            throw new InvalidIdentityApplicationStateException(
+                    "rejectionReason cannot exceed "
+                            + MAX_REJECTION_REASON_LENGTH
+                            + " characters."
+            );
+        }
+
+        return normalizedRejectionReason;
+    }
+
+    private static void requireState(
+            boolean condition,
+            String message
+    ) {
+        if (!condition) {
+            throw new InvalidIdentityApplicationStateException(
+                    message
+            );
+        }
+    }
+}
