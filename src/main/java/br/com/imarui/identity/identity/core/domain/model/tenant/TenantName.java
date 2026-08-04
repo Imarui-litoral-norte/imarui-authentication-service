@@ -15,15 +15,11 @@ public record TenantName(@NotNull String value) {
         value = value.trim();
 
         if (value.isBlank()) {
-            throw new InvalidTenantNameException(
-                    "TenantName value must not be blank."
-            );
+            throw InvalidTenantNameException.blank();
         }
 
         if (value.length() > MAX_LENGTH) {
-            throw new InvalidTenantNameException(
-                    "TenantName value must not exceed " + MAX_LENGTH + " characters."
-            );
+            throw InvalidTenantNameException.tooLong(MAX_LENGTH);
         }
     }
 

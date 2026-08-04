@@ -1,15 +1,20 @@
 package br.com.imarui.identity.identity.core.application.exception.tenant;
 
 import br.com.imarui.identity.identity.core.domain.model.tenant.TenantCode;
+import lombok.Getter;
 
+@Getter
 public final class TenantCodeAlreadyExistsException
         extends RuntimeException {
 
-    public TenantCodeAlreadyExistsException(TenantCode code) {
+    private final TenantCode tenantCode;
+
+    public TenantCodeAlreadyExistsException(TenantCode tenantCode) {
         super(
                 "Tenant with code "
-                        + code.value()
+                        + tenantCode.value()
                         + " already exists."
         );
+        this.tenantCode = tenantCode;
     }
 }

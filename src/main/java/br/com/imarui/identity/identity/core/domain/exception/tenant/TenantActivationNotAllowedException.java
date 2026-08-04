@@ -2,9 +2,14 @@ package br.com.imarui.identity.identity.core.domain.exception.tenant;
 
 import br.com.imarui.identity.identity.core.domain.enums.tenant.TenantStatus;
 import br.com.imarui.identity.identity.core.domain.model.tenant.TenantId;
+import lombok.Getter;
 
+@Getter
 public final class TenantActivationNotAllowedException
         extends RuntimeException {
+
+    private final TenantId tenantId;
+    private final TenantStatus currentStatus;
 
     public TenantActivationNotAllowedException(
             TenantId tenantId,
@@ -17,5 +22,7 @@ public final class TenantActivationNotAllowedException
                         + currentStatus
                         + "."
         );
+        this.tenantId = tenantId;
+        this.currentStatus = currentStatus;
     }
 }
