@@ -32,7 +32,6 @@ public class CreateTenantUseCase {
         if (tenantRepository.existsByCode(code)) {
             throw new TenantCodeAlreadyExistsException(code);
         }
-
         Instant now = clock.instant();
 
         Tenant tenant = Tenant.create(

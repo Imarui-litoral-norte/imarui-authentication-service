@@ -26,9 +26,7 @@ public class TenantRepositoryAdapter implements TenantRepository {
                 })
                 .orElseGet(() -> mapper.toEntity(tenant));
 
-        return mapper.toDomain(
-                jpaRepository.save(entity)
-        );
+        return mapper.toDomain(jpaRepository.save(entity));
     }
 
     public Optional<Tenant> findById(TenantId tenantId) {

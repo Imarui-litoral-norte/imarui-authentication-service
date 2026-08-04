@@ -1,6 +1,7 @@
 package br.com.imarui.identity.identity.core.domain.model.tenant;
 
 import br.com.imarui.identity.identity.core.domain.enums.tenant.TenantStatus;
+import br.com.imarui.identity.identity.core.domain.exception.tenant.TenantActivationNotAllowedException;
 import br.com.imarui.identity.identity.core.domain.exception.tenant.TenantRenameNotAllowedException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -92,12 +93,17 @@ public final class Tenant {
     }
 
     public void activate(@NotNull Instant now) {
-        Objects.requireNonNull(now, "now cannot be null");
+        Objects.requireNonNull(
+                now,
+                "now cannot be null"
+        );
+
         validateEventTime(now);
 
-        if (status != TenantStatus.PENDING) {
-            throw new IllegalStateException(
-                    "Only a pending tenant can be activated."
+        if (!isPending()) {
+            throw new TenantActivationNotAllowedException(
+                    id,
+                    status
             );
         }
 

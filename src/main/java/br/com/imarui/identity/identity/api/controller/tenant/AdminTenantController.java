@@ -1,24 +1,18 @@
 package br.com.imarui.identity.identity.api.controller.tenant;
 
 import br.com.imarui.identity.identity.api.dto.tenant.request.CreateTenantRequest;
+import br.com.imarui.identity.identity.api.dto.tenant.request.RenameTenantRequest;
 import br.com.imarui.identity.identity.api.dto.tenant.response.TenantResponse;
+import br.com.imarui.identity.identity.core.application.command.tenant.ActivateTenantCommand;
 import br.com.imarui.identity.identity.core.application.command.tenant.CreateTenantCommand;
+import br.com.imarui.identity.identity.core.application.command.tenant.RenameTenantCommand;
 import br.com.imarui.identity.identity.core.application.result.tenant.TenantResult;
-import br.com.imarui.identity.identity.core.application.service.tenant.ActivateTenantService;
-import br.com.imarui.identity.identity.core.application.service.tenant.CreateTenantService;
-import br.com.imarui.identity.identity.core.application.service.tenant.DisableTenantService;
-import br.com.imarui.identity.identity.core.application.service.tenant.ReactivateTenantService;
-import br.com.imarui.identity.identity.core.application.usecase.tenant.CreateTenantUseCase;
-import br.com.imarui.identity.identity.core.application.usecase.tenant.GetTenantUseCase;
+import br.com.imarui.identity.identity.core.application.usecase.tenant.*;
 import br.com.imarui.identity.identity.core.domain.model.tenant.TenantId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -26,10 +20,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class AdminTenantController {
 
-    private final GetTenantUseCase getTenantUseCase;
-    private final ActivateTenantService activateTenantService;
-    private final DisableTenantService disableTenantService;
-    private final ReactivateTenantService reactivateTenantService;
+    private final RenameTenantUseCase renameTenantUseCase;
+    private final ActivateTenantUseCase activateTenantUseCase;
+    private final DisableTenantUseCase disableTenantUseCase;
+    private final ReactivateTenantUseCase reactivateTenantUseCase;
     private final CreateTenantUseCase createTenantUseCase;
 
     @PostMapping
@@ -58,9 +52,11 @@ public class AdminTenantController {
     public ResponseEntity<TenantResponse> activate(
             @PathVariable String tenantId
     ) {
-        TenantId id = TenantId.from(tenantId);
+        ActivateTenantCommand command = new ActivateTenantCommand(
+                TenantId.from(tenantId)
+        );
 
-        TenantResult result = activateTenantService.execute(id);
+        TenantResult result = activateTenantUseCase.execute(command);
 
         return ResponseEntity.ok(
                 TenantResponse.from(result)
@@ -73,7 +69,7 @@ public class AdminTenantController {
     ) {
         TenantId id = TenantId.from(tenantId);
 
-        TenantResult result = disableTenantService.execute(id);
+        TenantResult result = disableTenantUseCase.execute(id);
 
         return ResponseEntity.ok(
                 TenantResponse.from(result)
@@ -86,7 +82,24 @@ public class AdminTenantController {
     ) {
         TenantId id = TenantId.from(tenantId);
 
-        TenantResult result = reactivateTenantService.execute(id);
+        TenantResult result = reactivateTenantUseCase.execute(id);
+
+        return ResponseEntity.ok(
+                TenantResponse.from(result)
+        );
+    }
+
+    @PatchMapping("/{tenantId}/name")
+    public ResponseEntity<TenantResponse> rename(
+            @PathVariable String tenantId,
+            @Valid @RequestBody RenameTenantRequest request
+    ) {
+        RenameTenantCommand command = new RenameTenantCommand(
+                TenantId.from(tenantId),
+                request.name()
+        );
+
+        TenantResult result = renameTenantUseCase.execute(command);
 
         return ResponseEntity.ok(
                 TenantResponse.from(result)

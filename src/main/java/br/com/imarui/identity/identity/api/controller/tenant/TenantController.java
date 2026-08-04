@@ -38,20 +38,5 @@ public class TenantController {
         );
     }
 
-    @PatchMapping("/{tenantId}/name")
-    public ResponseEntity<TenantResponse> rename(
-            @PathVariable String tenantId,
-            @Valid @RequestBody RenameTenantRequest request
-    ) {
-        RenameTenantCommand command = new RenameTenantCommand(
-                TenantId.from(tenantId),
-                request.name()
-        );
 
-        TenantResult result = renameTenantUseCase.execute(command);
-
-        return ResponseEntity.ok(
-                TenantResponse.from(result)
-        );
-    }
 }
