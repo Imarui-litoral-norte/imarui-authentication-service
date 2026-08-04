@@ -1,3 +1,18 @@
 spring:
   application:
-    name: authentication-service
+    name: imarui-iam-service
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    open-in-view: false
+
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:validate}
+
+    properties:
+      hibernate:
+        format_sql: false
