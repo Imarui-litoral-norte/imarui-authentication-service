@@ -1,95 +1,41 @@
 package br.com.imarui.ima.identity.api.controller.identity;
 
-import br.com.imarui.ima.authentication.api.http.dto.token.AuthTokenResponseDTO;
-import br.com.imarui.ima.identity.api.dto.user.UserRegistrationRequestDTO;
-import br.com.imarui.ima.authentication.core.application.result.AuthTokens;
-import br.com.imarui.ima.identity.core.application.service.user.UserService;
-import br.com.imarui.ima.platform.openapi.group.SwaggerOperationGroup;
-import br.com.imarui.ima.platform.web.exception.ApiErrorResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import br.com.imarui.ima.identity.api.dto.identity.response.IdentityResponse;
+import br.com.imarui.ima.identity.core.application.command.identity.GetIdentityUseCaseCommand;
+import br.com.imarui.ima.identity.core.application.result.identity.IdentityResult;
+import br.com.imarui.ima.identity.core.application.usecase.identity.GetIdentityUseCase;
+import br.com.imarui.ima.identity.core.domain.model.identity.IdentityId;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(
-        value = "/authentication",
+        value = "/api/v1/identities",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 @RequiredArgsConstructor
-@Validated
-@Tag(
-        name = "Authentication - Users",
-        description = "Operações públicas e administrativas para cadastro, consulta e gerenciamento de usuários."
-)
 public class IdentityController {
 
-    private final UserService userService;
+    private final GetIdentityUseCase getIdentityUseCase;
 
-    @PostMapping(
-            value = "/register",
-            consumes = MediaType.APPLICATION_JSON_VALUE
-    )
-    @SwaggerOperationGroup(value = "Rotas públicas", order = 10)
-    @Operation(
-            summary = "Registrar usuário",
-            description = """
-                    Cria uma nova conta de usuário a partir dos dados cadastrais informados.
-                    Após o registro, autentica o usuário criado e retorna access token e refresh token.
-                    """,
-            security = {},
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "Usuário registrado e autenticado com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AuthTokenResponseDTO.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Requisição inválida ou dados cadastrais inconsistentes.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "409",
-                            description = "Já existe usuário cadastrado com os dados únicos informados.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<AuthTokenResponseDTO> register(
-            @RequestBody @Valid UserRegistrationRequestDTO request
+    @GetMapping("/{identityId}")
+    public ResponseEntity<IdentityResponse> findById(
+            @PathVariable String identityId
     ) {
-        AuthTokens tokens = userService.registerAndAuthenticate(
-                request.name(),
-                request.birthDate(),
-                request.email(),
-                request.cpf(),
-                request.rg(),
-                request.password(),
-                request.phoneNumber()
-        );
+        GetIdentityUseCaseCommand command =
+                new GetIdentityUseCaseCommand(
+                        IdentityId.from(identityId)
+                );
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(AuthTokenResponseDTO.from(tokens));
+        IdentityResult result = getIdentityUseCase.execute(command);
+
+        return ResponseEntity.ok(
+                IdentityResponse.from(result)
+        );
     }
 }

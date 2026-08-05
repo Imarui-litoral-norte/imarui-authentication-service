@@ -2,7 +2,6 @@ package br.com.imarui.ima.authentication.api.http.exception;
 
 import br.com.imarui.ima.authentication.core.application.exceptions.session.SessionInvalidException;
 import br.com.imarui.ima.authentication.core.application.exceptions.session.SessionNotFoundException;
-import br.com.imarui.ima.authentication.core.application.exceptions.session.SessionUserMismatchException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionInvalidActiveStateException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionInvalidExpirationDateException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionInvalidLogoutStateException;
@@ -13,7 +12,6 @@ import br.com.imarui.ima.authentication.core.domain.exception.session.SessionMis
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionMissingIdException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionMissingStatusException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionMissingTtlException;
-import br.com.imarui.ima.authentication.core.domain.exception.session.SessionMissingUserIdException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionNotActiveException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionNowInstantRequiredException;
 import br.com.imarui.ima.platform.web.exception.ApiErrorResponse;
@@ -23,7 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(basePackages = "br.com.imarui.authentication")
+@RestControllerAdvice(basePackages = "br.com.imarui.ima.authentication")
 public class SessionExceptionHandler extends ApiExceptionHandler {
 
     @ExceptionHandler(SessionInvalidActiveStateException.class)
@@ -76,11 +74,6 @@ public class SessionExceptionHandler extends ApiExceptionHandler {
         return buildErrorResponse("SESSION_MISSING_TTL", exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(SessionMissingUserIdException.class)
-    public ResponseEntity<ApiErrorResponse> handleSessionMissingUserId(SessionMissingUserIdException exception) {
-        return buildErrorResponse("SESSION_MISSING_USER_ID", exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(SessionNotActiveException.class)
     public ResponseEntity<ApiErrorResponse> handleSessionNotActive(SessionNotActiveException exception) {
         return buildErrorResponse("SESSION_NOT_ACTIVE", exception.getMessage(), HttpStatus.BAD_REQUEST);
@@ -101,8 +94,4 @@ public class SessionExceptionHandler extends ApiExceptionHandler {
         return buildErrorResponse("SESSION_NOT_FOUND", exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(SessionUserMismatchException.class)
-    public ResponseEntity<ApiErrorResponse> handleSessionUserMismatch(SessionUserMismatchException exception) {
-        return buildErrorResponse("SESSION_USER_MISMATCH", exception.getMessage(), HttpStatus.FORBIDDEN);
-    }
 }

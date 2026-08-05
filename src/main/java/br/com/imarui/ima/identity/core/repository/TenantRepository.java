@@ -4,11 +4,14 @@ import br.com.imarui.ima.identity.core.domain.model.tenant.Tenant;
 import br.com.imarui.ima.identity.core.domain.model.tenant.TenantCode;
 import br.com.imarui.ima.identity.core.domain.model.tenant.TenantId;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TenantRepository {
 
     Tenant save(Tenant tenant);
+
+    List<Tenant> findAllActive();
 
     Optional<Tenant> findById(TenantId tenantId);
 

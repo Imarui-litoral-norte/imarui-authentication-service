@@ -1,7 +1,6 @@
 package br.com.imarui.ima.authentication.core.application.service.refreshtoken;
 
 import br.com.imarui.ima.authentication.core.application.exceptions.refreshtoken.RefreshTokenNotFoundException;
-import br.com.imarui.ima.identity.core.application.exception.identity.UserIdNotFoundException;
 import br.com.imarui.ima.authentication.core.application.result.admin.refresh.AdminRefreshTokenResult;
 import br.com.imarui.ima.authentication.core.domain.model.RefreshToken;
 import br.com.imarui.ima.authentication.core.repository.RefreshTokenRepository;
@@ -18,7 +17,6 @@ import java.util.List;
 public class AdminRefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserRepository userRepository;
     private final Clock clock;
 
     @Transactional(readOnly = true)
@@ -35,16 +33,6 @@ public class AdminRefreshTokenService {
                 findRefreshTokenById(refreshTokenId);
 
         return AdminRefreshTokenResult.from(refreshToken);
-    }
-
-    @Transactional(readOnly = true)
-    public List<AdminRefreshTokenResult> findByUserId(Long userId) {
-        ensureUserExists(userId);
-
-        List<RefreshToken> refreshTokens =
-                refreshTokenRepository.findByUserId(userId);
-
-        return AdminRefreshTokenResult.from(refreshTokens);
     }
 
     @Transactional
@@ -80,9 +68,4 @@ public class AdminRefreshTokenService {
                 );
     }
 
-    private void ensureUserExists(Long userId) {
-        if (userRepository.findById(userId).isEmpty()) {
-            throw new UserIdNotFoundException(userId);
-        }
-    }
 }

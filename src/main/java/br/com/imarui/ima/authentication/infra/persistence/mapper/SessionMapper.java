@@ -11,7 +11,6 @@ public class SessionMapper {
         if (entity == null) return null;
         return Session.reconstitute(
                 entity.getId(),
-                entity.getUserId(),
                 entity.getCreatedAt(),
                 entity.getExpiresAt(),
                 entity.getLoggedOutAt(),
@@ -23,7 +22,6 @@ public class SessionMapper {
         if (domain == null) return null;
         SessionEntity entity = new SessionEntity();
         entity.setId(domain.getId());
-        entity.setUserId(domain.getUserId());
         entity.setCreatedAt(domain.getCreatedAt());
         entity.setExpiresAt(domain.getExpiresAt());
         entity.setLoggedOutAt(domain.getLoggedOutAt());

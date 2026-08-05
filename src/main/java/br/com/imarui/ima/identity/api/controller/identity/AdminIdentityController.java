@@ -1,199 +1,67 @@
 package br.com.imarui.ima.identity.api.controller.identity;
 
-import br.com.imarui.ima.authentication.api.http.dto.admin.user.AdminUserResponseDTO;
-import br.com.imarui.ima.authentication.core.application.result.admin.user.AdminUserResult;
-import br.com.imarui.ima.platform.openapi.group.SwaggerOperationGroup;
-import br.com.imarui.ima.platform.openapi.security.RequiredPermission;
-import br.com.imarui.ima.platform.web.exception.ApiErrorResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Positive;
+import br.com.imarui.ima.identity.api.dto.identity.response.IdentityResponse;
+import br.com.imarui.ima.identity.core.application.command.identity.ActivateIdentityCommand;
+import br.com.imarui.ima.identity.core.application.command.identity.DisableIdentityCommand;
+import br.com.imarui.ima.identity.core.application.command.identity.ReactivateIdentityCommand;
+import br.com.imarui.ima.identity.core.application.result.identity.IdentityResult;
+import br.com.imarui.ima.identity.core.application.usecase.identity.ActivateIdentityUseCase;
+import br.com.imarui.ima.identity.core.application.usecase.identity.DisableIdentityUseCase;
+import br.com.imarui.ima.identity.core.application.usecase.identity.ReactivateIdentityUseCase;
+import br.com.imarui.ima.identity.core.domain.model.identity.IdentityId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(
-        value = "/authentication/admin/users",
+        value = "/api/v1/admin/identities",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 @RequiredArgsConstructor
-@Validated
-@Tag(
-        name = "Authentication - Users",
-        description = "Operações públicas e administrativas para cadastro, consulta e gerenciamento de usuários."
-)
 public class AdminIdentityController {
 
-    private final AdminUserService adminUserService;
+    private final ActivateIdentityUseCase activateIdentityUseCase;
+    private final DisableIdentityUseCase disableIdentityUseCase;
+    private final ReactivateIdentityUseCase reactivateIdentityUseCase;
 
-    @GetMapping
-    @PreAuthorize("hasAuthority('AUTHENTICATION_USER_READ')")
-    @RequiredPermission("AUTHENTICATION_USER_READ")
-    @SwaggerOperationGroup(value = "Rotas administrativas", order = 30)
-    @Operation(
-            summary = "Listar usuários",
-            description = "Retorna os usuários cadastrados no módulo de autenticação.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Usuários retornados com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminUserResponseDTO.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Usuário não autenticado.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "403",
-                            description = "Usuário autenticado sem permissão para consultar usuários.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<List<AdminUserResponseDTO>> findAll() {
-        List<AdminUserResult> results = adminUserService.findAll();
+    @PostMapping("/{identityId}/activate")
+    public ResponseEntity<IdentityResponse> activate(
+            @PathVariable String identityId
+    ) {
+        ActivateIdentityCommand command = new ActivateIdentityCommand(
+                IdentityId.from(identityId)
+        );
+        IdentityResult result = activateIdentityUseCase.execute(command);
 
-        return ResponseEntity.ok(AdminUserResponseDTO.from(results));
+        return ResponseEntity.ok(IdentityResponse.from(result));
     }
 
-    @GetMapping("/{userId}")
-    @PreAuthorize("hasAuthority('AUTHENTICATION_USER_READ')")
-    @RequiredPermission("AUTHENTICATION_USER_READ")
-    @SwaggerOperationGroup(value = "Rotas administrativas", order = 30)
-    @Operation(
-            summary = "Consultar usuário",
-            description = "Retorna os dados administrativos de um usuário específico.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Usuário retornado com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminUserResponseDTO.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Usuário não encontrado.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<AdminUserResponseDTO> findById(
-            @PathVariable @Positive Long userId
+    @PostMapping("/{identityId}/disable")
+    public ResponseEntity<IdentityResponse> disable(
+            @PathVariable String identityId
     ) {
-        AdminUserResult result = adminUserService.findById(userId);
+        DisableIdentityCommand command = new DisableIdentityCommand(
+                IdentityId.from(identityId)
+        );
+        IdentityResult result = disableIdentityUseCase.execute(command);
 
-        return ResponseEntity.ok(AdminUserResponseDTO.from(result));
+        return ResponseEntity.ok(IdentityResponse.from(result));
     }
 
-    @PatchMapping("/{userId}/disable")
-    @PreAuthorize("hasAuthority('AUTHENTICATION_USER_DISABLE')")
-    @RequiredPermission("AUTHENTICATION_USER_DISABLE")
-    @SwaggerOperationGroup(value = "Rotas administrativas", order = 30)
-    @Operation(
-            summary = "Desativar usuário",
-            description = "Desativa administrativamente um usuário cadastrado.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Usuário desativado com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminUserResponseDTO.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Usuário não encontrado.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "409",
-                            description = "Usuário já está desativado ou não pode ser desativado no estado atual.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<AdminUserResponseDTO> disable(
-            @PathVariable @Positive Long userId
+    @PostMapping("/{identityId}/reactivate")
+    public ResponseEntity<IdentityResponse> reactivate(
+            @PathVariable String identityId
     ) {
-        AdminUserResult result = adminUserService.disable(userId);
+        ReactivateIdentityCommand command = new ReactivateIdentityCommand(
+                IdentityId.from(identityId)
+        );
+        IdentityResult result = reactivateIdentityUseCase.execute(command);
 
-        return ResponseEntity.ok(AdminUserResponseDTO.from(result));
-    }
-
-    @PatchMapping("/{userId}/enable")
-    @PreAuthorize("hasAuthority('AUTHENTICATION_USER_ENABLE')")
-    @RequiredPermission("AUTHENTICATION_USER_ENABLE")
-    @SwaggerOperationGroup(value = "Rotas administrativas", order = 30)
-    @Operation(
-            summary = "Reativar usuário",
-            description = "Reativa administrativamente um usuário desativado.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Usuário reativado com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminUserResponseDTO.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Usuário não encontrado.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "409",
-                            description = "Usuário já está ativo ou não pode ser reativado no estado atual.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<AdminUserResponseDTO> enable(
-            @PathVariable @Positive Long userId
-    ) {
-        AdminUserResult result = adminUserService.enable(userId);
-
-        return ResponseEntity.ok(AdminUserResponseDTO.from(result));
+        return ResponseEntity.ok(IdentityResponse.from(result));
     }
 }

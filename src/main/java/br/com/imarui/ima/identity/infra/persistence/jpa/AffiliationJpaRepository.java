@@ -13,19 +13,34 @@ import java.util.UUID;
 public interface AffiliationJpaRepository
         extends JpaRepository<AffiliationEntity, UUID> {
 
+    List<AffiliationEntity> findAllByStatusOrderByStartedAtDesc(
+            AffiliationStatus status
+    );
+
+    Optional<AffiliationEntity> findByIdAndStatus(
+            UUID affiliationId,
+            AffiliationStatus status
+    );
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
             select affiliation
-              from AffiliationJpaEntity affiliation
+              from AffiliationEntity affiliation
              where affiliation.id = :affiliationId
             """)
     Optional<AffiliationEntity> findByIdForUpdate(
             @Param("affiliationId") UUID affiliationId
     );
 
-    List<AffiliationEntity> findByTenantId(UUID tenantId);
+    List<AffiliationEntity> findByTenantIdAndStatusOrderByStartedAtDesc(
+            UUID tenantId,
+            AffiliationStatus status
+    );
 
-    List<AffiliationEntity> findByIdentityId(UUID identityId);
+    List<AffiliationEntity> findByIdentityIdAndStatusOrderByStartedAtDesc(
+            UUID identityId,
+            AffiliationStatus status
+    );
 
     boolean existsByTenantIdAndIdentityIdAndStatus(
             UUID tenantId,
@@ -35,7 +50,7 @@ public interface AffiliationJpaRepository
 
     @Query("""
             select (count(employee) > 0)
-              from EmployeeAffiliationJpaEntity employee
+              from EmployeeAffiliationEntity employee
              where employee.tenantId = :tenantId
                and employee.registration = :registration
             """)
@@ -46,7 +61,7 @@ public interface AffiliationJpaRepository
 
     @Query("""
             select (count(customer) > 0)
-              from CustomerAffiliationJpaEntity customer
+              from CustomerAffiliationEntity customer
              where customer.tenantId = :tenantId
                and customer.customerCode = :customerCode
             """)

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(
-        basePackages = "br.com.imarui.authentication"
+        basePackages = "br.com.imarui.ima.authentication"
 )
 public class RefreshTokenExceptionHandler
         extends ApiExceptionHandler {

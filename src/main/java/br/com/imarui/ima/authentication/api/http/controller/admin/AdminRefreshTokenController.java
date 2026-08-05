@@ -26,16 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(
-        value = "/authentication/admin",
-        produces = MediaType.APPLICATION_JSON_VALUE
-)
+@RequestMapping(value = "/authentication/admin", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@Tag(
-        name = "Authentication - Refresh Tokens",
-        description = "Operações públicas e administrativas para renovação, consulta e gerenciamento de refresh tokens."
-)
+@Tag(name = "Authentication - Refresh Tokens", description = "Operações administrativas para consulta e gerenciamento de refresh tokens.")
 public class AdminRefreshTokenController {
 
     private final AdminRefreshTokenService adminRefreshTokenService;
@@ -47,20 +41,14 @@ public class AdminRefreshTokenController {
     @Operation(
             summary = "Listar refresh tokens",
             description = "Retorna metadados administrativos de refresh tokens cadastrados.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Refresh tokens retornados com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminRefreshTokenResponseDTO.class)
-                            )
-                    )
-            }
+            responses = @ApiResponse(
+                    responseCode = "200",
+                    description = "Refresh tokens retornados com sucesso.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AdminRefreshTokenResponseDTO.class))
+            )
     )
     public ResponseEntity<List<AdminRefreshTokenResponseDTO>> findAll() {
         List<AdminRefreshTokenResult> results = adminRefreshTokenService.findAll();
-
         return ResponseEntity.ok(AdminRefreshTokenResponseDTO.from(results));
     }
 
@@ -75,61 +63,18 @@ public class AdminRefreshTokenController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Refresh token retornado com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminRefreshTokenResponseDTO.class)
-                            )
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AdminRefreshTokenResponseDTO.class))
                     ),
                     @ApiResponse(
                             responseCode = "404",
                             description = "Refresh token não encontrado.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiErrorResponse.class))
                     )
             }
     )
-    public ResponseEntity<AdminRefreshTokenResponseDTO> findById(
-            @PathVariable @Positive Long refreshTokenId
-    ) {
+    public ResponseEntity<AdminRefreshTokenResponseDTO> findById(@PathVariable @Positive Long refreshTokenId) {
         AdminRefreshTokenResult result = adminRefreshTokenService.findById(refreshTokenId);
-
         return ResponseEntity.ok(AdminRefreshTokenResponseDTO.from(result));
-    }
-
-    @GetMapping("/users/{userId}/refresh-tokens")
-    @PreAuthorize("hasAuthority('AUTHENTICATION_REFRESH_TOKEN_READ')")
-    @RequiredPermission("AUTHENTICATION_REFRESH_TOKEN_READ")
-    @SwaggerOperationGroup(value = "Rotas administrativas", order = 30)
-    @Operation(
-            summary = "Listar refresh tokens de um usuário",
-            description = "Retorna metadados administrativos dos refresh tokens vinculados a um usuário específico.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Refresh tokens do usuário retornados com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminRefreshTokenResponseDTO.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Usuário não encontrado.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<List<AdminRefreshTokenResponseDTO>> findByUserId(
-            @PathVariable @Positive Long userId
-    ) {
-        List<AdminRefreshTokenResult> results = adminRefreshTokenService.findByUserId(userId);
-
-        return ResponseEntity.ok(AdminRefreshTokenResponseDTO.from(results));
     }
 
     @PatchMapping("/refresh-tokens/{refreshTokenId}/revoke")
@@ -143,34 +88,22 @@ public class AdminRefreshTokenController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Refresh token revogado com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminRefreshTokenResponseDTO.class)
-                            )
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AdminRefreshTokenResponseDTO.class))
                     ),
                     @ApiResponse(
                             responseCode = "404",
                             description = "Refresh token não encontrado.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiErrorResponse.class))
                     ),
                     @ApiResponse(
                             responseCode = "409",
                             description = "Refresh token já está revogado ou não pode ser revogado no estado atual.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiErrorResponse.class))
                     )
             }
     )
-    public ResponseEntity<AdminRefreshTokenResponseDTO> revoke(
-            @PathVariable @Positive Long refreshTokenId
-    ) {
+    public ResponseEntity<AdminRefreshTokenResponseDTO> revoke(@PathVariable @Positive Long refreshTokenId) {
         AdminRefreshTokenResult result = adminRefreshTokenService.revoke(refreshTokenId);
-
         return ResponseEntity.ok(AdminRefreshTokenResponseDTO.from(result));
     }
 }

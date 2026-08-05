@@ -15,6 +15,8 @@ public interface AffiliationRepository {
 
     Affiliation save(Affiliation affiliation);
 
+    List<Affiliation> findAllActive();
+
     Optional<Affiliation> findById(AffiliationId affiliationId);
 
     Optional<Affiliation> findByIdForUpdate(

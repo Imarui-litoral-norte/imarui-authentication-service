@@ -11,7 +11,6 @@ import br.com.imarui.ima.authentication.core.domain.exception.session.SessionMis
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionMissingIdException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionMissingStatusException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionMissingTtlException;
-import br.com.imarui.ima.authentication.core.domain.exception.session.SessionMissingUserIdException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionNotActiveException;
 import br.com.imarui.ima.authentication.core.domain.exception.session.SessionNowInstantRequiredException;
 import lombok.AccessLevel;
@@ -26,21 +25,15 @@ import java.time.Instant;
 public class Session {
 
     private Long id;
-    private Long userId;
     private Instant createdAt;
     private Instant expiresAt;
     private Instant loggedOutAt;
     private SessionStatus status;
 
     private Session(
-            Long userId,
             Duration ttl,
             Instant now
     ) {
-        if (userId == null) {
-            throw new SessionMissingUserIdException("userId is required");
-        }
-
         if (ttl == null) {
             throw new SessionMissingTtlException("ttl is required");
         }
@@ -53,19 +46,16 @@ public class Session {
             throw new SessionNowInstantRequiredException("now is required");
         }
 
-        this.userId = userId;
         this.createdAt = now;
         this.expiresAt = now.plus(ttl);
         this.status = SessionStatus.ACTIVE;
     }
 
     public static Session create(
-            Long userId,
             Duration ttl,
             Instant now
     ) {
         return new Session(
-                userId,
                 ttl,
                 now
         );
@@ -73,7 +63,6 @@ public class Session {
 
     public static Session reconstitute(
             Long id,
-            Long userId,
             Instant createdAt,
             Instant expiresAt,
             Instant loggedOutAt,
@@ -81,10 +70,6 @@ public class Session {
     ) {
         if (id == null) {
             throw new SessionMissingIdException("id is required");
-        }
-
-        if (userId == null) {
-            throw new SessionMissingUserIdException("userId is required");
         }
 
         if (createdAt == null) {
@@ -129,7 +114,6 @@ public class Session {
 
         Session session = new Session();
         session.id = id;
-        session.userId = userId;
         session.createdAt = createdAt;
         session.expiresAt = expiresAt;
         session.loggedOutAt = loggedOutAt;

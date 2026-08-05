@@ -1,5 +1,6 @@
 package br.com.imarui.ima.identity.infra.persistence.adapter;
 
+import br.com.imarui.ima.identity.core.domain.enums.identity.IdentityStatus;
 import br.com.imarui.ima.identity.core.domain.model.identity.*;
 import br.com.imarui.ima.identity.core.domain.model.identity.LegalEntity.Cnpj;
 import br.com.imarui.ima.identity.core.domain.model.identity.person.Cpf;
@@ -10,6 +11,7 @@ import br.com.imarui.ima.identity.infra.persistence.mapper.IdentityPersistenceMa
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,6 +21,7 @@ public class IdentityRepositoryAdapter implements IdentityRepository {
     private final IdentityJpaRepository jpaRepository;
     private final IdentityPersistenceMapper mapper;
 
+    @Override
     public Identity save(Identity identity) {
         IdentityEntity entity = jpaRepository
                 .findById(identity.getId().value())
@@ -33,12 +36,28 @@ public class IdentityRepositoryAdapter implements IdentityRepository {
         );
     }
 
+    @Override
+    public List<Identity> findAllActive() {
+        return jpaRepository
+                .findAllByStatusOrderByCreatedAtDesc(
+                        IdentityStatus.ACTIVE
+                )
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public Optional<Identity> findById(IdentityId identityId) {
         return jpaRepository
-                .findById(identityId.value())
+                .findByIdAndStatus(
+                        identityId.value(),
+                        IdentityStatus.ACTIVE
+                )
                 .map(mapper::toDomain);
     }
 
+    @Override
     public Optional<Identity> findByIdForUpdate(
             IdentityId identityId
     ) {
@@ -47,18 +66,27 @@ public class IdentityRepositoryAdapter implements IdentityRepository {
                 .map(mapper::toDomain);
     }
 
+    @Override
     public Optional<Identity> findPersonByCpf(Cpf cpf) {
         return jpaRepository
-                .findPersonByCpf(cpf.value())
+                .findPersonByCpf(
+                        cpf.value(),
+                        IdentityStatus.ACTIVE
+                )
                 .map(mapper::toDomain);
     }
 
+    @Override
     public Optional<Identity> findLegalEntityByCnpj(Cnpj cnpj) {
         return jpaRepository
-                .findLegalEntityByCnpj(cnpj.value())
+                .findLegalEntityByCnpj(
+                        cnpj.value(),
+                        IdentityStatus.ACTIVE
+                )
                 .map(mapper::toDomain);
     }
 
+    @Override
     public boolean existsByPrimaryEmail(Email email) {
         return jpaRepository.existsByPrimaryEmail(
                 email.value()

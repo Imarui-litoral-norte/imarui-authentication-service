@@ -88,49 +88,6 @@ public class RefreshTokenRepositoryAdapter
     }
 
     @Override
-    public List<RefreshToken> findByUserId(Long userId) {
-        List<Session> sessions =
-                sessionJpaRepository
-                        .findByUserIdOrderByCreatedAtDesc(userId)
-                        .stream()
-                        .map(SessionMapper::toDomain)
-                        .toList();
-
-        if (sessions.isEmpty()) {
-            return List.of();
-        }
-
-        List<Long> sessionIds = sessions.stream()
-                .map(Session::getId)
-                .toList();
-
-        List<RefreshTokenEntity> tokenEntities =
-                jpaRepository
-                        .findBySessionIdInOrderByCreatedAtDesc(
-                                sessionIds
-                        );
-
-        Map<Long, Session> sessionsById =
-                sessions.stream()
-                        .collect(Collectors.toMap(
-                                Session::getId,
-                                Function.identity()
-                        ));
-
-        return tokenEntities.stream()
-                .map(entity -> mapToDomain(
-                        entity,
-                        sessionsById
-                ))
-                .toList();
-    }
-
-    @Override
-    public void revokeActiveByUserId(Long userId) {
-        jpaRepository.revokeActiveByUserId(userId);
-    }
-
-    @Override
     public void revokeActiveBySessionId(Long sessionId) {
         jpaRepository.revokeActiveBySessionId(sessionId);
     }

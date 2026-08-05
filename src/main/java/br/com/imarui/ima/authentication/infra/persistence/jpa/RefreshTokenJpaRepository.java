@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 public interface RefreshTokenJpaRepository
@@ -58,35 +56,14 @@ public interface RefreshTokenJpaRepository
             Long sessionId
     );
 
-    List<RefreshTokenEntity>
-    findBySessionIdInOrderByCreatedAtDesc(
-            Collection<Long> sessionIds
-    );
-
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
             UPDATE RefreshTokenEntity token
             SET token.status =
-                br.com.imarui.authentication.core.domain.enums.RefreshTokenStatus.REVOKED,
+                br.com.imarui.ima.authentication.core.domain.enums.RefreshTokenStatus.REVOKED,
                 token.replacedByTokenId = null
             WHERE token.status =
-                br.com.imarui.authentication.core.domain.enums.RefreshTokenStatus.ACTIVE
-              AND token.sessionId IN (
-                  SELECT session.id
-                  FROM SessionEntity session
-                  WHERE session.userId = :userId
-              )
-            """)
-    void revokeActiveByUserId(@Param("userId") Long userId);
-
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("""
-            UPDATE RefreshTokenEntity token
-            SET token.status =
-                br.com.imarui.authentication.core.domain.enums.RefreshTokenStatus.REVOKED,
-                token.replacedByTokenId = null
-            WHERE token.status =
-                br.com.imarui.authentication.core.domain.enums.RefreshTokenStatus.ACTIVE
+                br.com.imarui.ima.authentication.core.domain.enums.RefreshTokenStatus.ACTIVE
               AND token.sessionId = :sessionId
             """)
     void revokeActiveBySessionId(@Param("sessionId") Long sessionId);

@@ -1,7 +1,6 @@
 package br.com.imarui.ima.authentication.core.application.service.session;
 
 import br.com.imarui.ima.authentication.core.application.exceptions.session.SessionNotFoundException;
-import br.com.imarui.ima.identity.core.application.exception.identity.UserIdNotFoundException;
 import br.com.imarui.ima.authentication.core.application.result.admin.session.AdminSessionResult;
 import br.com.imarui.ima.authentication.core.domain.model.Session;
 import br.com.imarui.ima.authentication.core.repository.SessionRepository;
@@ -18,7 +17,6 @@ import java.util.List;
 public class AdminSessionService {
 
     private final SessionRepository sessionRepository;
-    private final UserRepository userRepository;
     private final Clock clock;
 
     @Transactional(readOnly = true)
@@ -36,17 +34,6 @@ public class AdminSessionService {
                 findSessionById(sessionId);
 
         return AdminSessionResult.from(session);
-    }
-
-    @Transactional(readOnly = true)
-    public List<AdminSessionResult> findByUserId(
-            Long userId
-    ) {
-        ensureUserExists(userId);
-
-        return AdminSessionResult.from(
-                sessionRepository.findByUserId(userId)
-        );
     }
 
     @Transactional
@@ -91,9 +78,4 @@ public class AdminSessionService {
                 );
     }
 
-    private void ensureUserExists(Long userId) {
-        if (userRepository.findById(userId).isEmpty()) {
-            throw new UserIdNotFoundException(userId);
-        }
-    }
 }

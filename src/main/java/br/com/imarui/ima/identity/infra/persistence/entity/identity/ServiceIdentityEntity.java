@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(name = "service_identities")
+@Table(name = "ima_service_identities")
 @DiscriminatorValue("SERVICE")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ServiceIdentityEntity extends IdentityEntity {

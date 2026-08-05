@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "external_affiliations")
+@Table(name = "ima_external_affiliations")
 @DiscriminatorValue("EXTERNAL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExternalAffiliationEntity extends AffiliationEntity {

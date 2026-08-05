@@ -1,6 +1,5 @@
 package br.com.imarui.ima.authentication.infra.persistence.adapter;
 
-import br.com.imarui.ima.authentication.core.domain.enums.SessionStatus;
 import br.com.imarui.ima.authentication.core.domain.model.Session;
 import br.com.imarui.ima.authentication.core.repository.SessionRepository;
 import br.com.imarui.ima.authentication.infra.persistence.jpa.SessionJpaRepository;
@@ -40,33 +39,6 @@ public class SessionRepositoryAdapter
     }
 
     @Override
-    public Optional<Long> findUserIdById(Long sessionId) {
-        return jpaRepository.findUserIdById(sessionId);
-    }
-
-    @Override
-    public Optional<Session> findActiveByUserId(Long userId) {
-        return jpaRepository
-                .findFirstByUserIdAndStatusOrderByCreatedAtDesc(
-                        userId,
-                        SessionStatus.ACTIVE
-                )
-                .map(SessionMapper::toDomain);
-    }
-
-    @Override
-    public Optional<Session> findActiveByUserIdForUpdate(
-            Long userId
-    ) {
-        return jpaRepository
-                .findTopByUserIdAndStatusOrderByCreatedAtDesc(
-                        userId,
-                        SessionStatus.ACTIVE
-                )
-                .map(SessionMapper::toDomain);
-    }
-
-    @Override
     public List<Session> findAll() {
         return jpaRepository.findAll()
                 .stream()
@@ -74,17 +46,4 @@ public class SessionRepositoryAdapter
                 .toList();
     }
 
-    @Override
-    public List<Session> findByUserId(Long userId) {
-        return jpaRepository
-                .findByUserIdOrderByCreatedAtDesc(userId)
-                .stream()
-                .map(SessionMapper::toDomain)
-                .toList();
-    }
-
-    @Override
-    public void revokeActiveByUserId(Long userId) {
-        jpaRepository.revokeActiveByUserId(userId);
-    }
 }

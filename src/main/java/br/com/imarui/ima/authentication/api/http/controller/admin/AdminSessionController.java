@@ -26,16 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(
-        value = "/authentication/admin",
-        produces = MediaType.APPLICATION_JSON_VALUE
-)
+@RequestMapping(value = "/authentication/admin", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@Tag(
-        name = "Authentication - Sessions",
-        description = "Operações públicas, autenticadas e administrativas para autenticação, consulta e gerenciamento de sessões."
-)
+@Tag(name = "Authentication - Sessions", description = "Operações administrativas para consulta e gerenciamento de sessões.")
 public class AdminSessionController {
 
     private final AdminSessionService adminSessionService;
@@ -47,20 +41,14 @@ public class AdminSessionController {
     @Operation(
             summary = "Listar sessões",
             description = "Retorna as sessões cadastradas no módulo de autenticação.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Sessões retornadas com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminSessionResponseDTO.class)
-                            )
-                    )
-            }
+            responses = @ApiResponse(
+                    responseCode = "200",
+                    description = "Sessões retornadas com sucesso.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AdminSessionResponseDTO.class))
+            )
     )
     public ResponseEntity<List<AdminSessionResponseDTO>> findAll() {
         List<AdminSessionResult> results = adminSessionService.findAll();
-
         return ResponseEntity.ok(AdminSessionResponseDTO.from(results));
     }
 
@@ -75,61 +63,18 @@ public class AdminSessionController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Sessão retornada com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminSessionResponseDTO.class)
-                            )
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AdminSessionResponseDTO.class))
                     ),
                     @ApiResponse(
                             responseCode = "404",
                             description = "Sessão não encontrada.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiErrorResponse.class))
                     )
             }
     )
-    public ResponseEntity<AdminSessionResponseDTO> findById(
-            @PathVariable @Positive Long sessionId
-    ) {
+    public ResponseEntity<AdminSessionResponseDTO> findById(@PathVariable @Positive Long sessionId) {
         AdminSessionResult result = adminSessionService.findById(sessionId);
-
         return ResponseEntity.ok(AdminSessionResponseDTO.from(result));
-    }
-
-    @GetMapping("/users/{userId}/sessions")
-    @PreAuthorize("hasAuthority('AUTHENTICATION_SESSION_READ')")
-    @RequiredPermission("AUTHENTICATION_SESSION_READ")
-    @SwaggerOperationGroup(value = "Rotas administrativas", order = 30)
-    @Operation(
-            summary = "Listar sessões de um usuário",
-            description = "Retorna as sessões vinculadas a um usuário específico.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Sessões do usuário retornadas com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminSessionResponseDTO.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Usuário não encontrado.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<List<AdminSessionResponseDTO>> findByUserId(
-            @PathVariable @Positive Long userId
-    ) {
-        List<AdminSessionResult> results = adminSessionService.findByUserId(userId);
-
-        return ResponseEntity.ok(AdminSessionResponseDTO.from(results));
     }
 
     @PatchMapping("/sessions/{sessionId}/logout")
@@ -143,34 +88,22 @@ public class AdminSessionController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Sessão encerrada com sucesso.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdminSessionResponseDTO.class)
-                            )
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AdminSessionResponseDTO.class))
                     ),
                     @ApiResponse(
                             responseCode = "404",
                             description = "Sessão não encontrada.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiErrorResponse.class))
                     ),
                     @ApiResponse(
                             responseCode = "409",
                             description = "Sessão já está encerrada ou não pode ser encerrada no estado atual.",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ApiErrorResponse.class)
-                            )
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiErrorResponse.class))
                     )
             }
     )
-    public ResponseEntity<AdminSessionResponseDTO> logout(
-            @PathVariable @Positive Long sessionId
-    ) {
+    public ResponseEntity<AdminSessionResponseDTO> logout(@PathVariable @Positive Long sessionId) {
         AdminSessionResult result = adminSessionService.logout(sessionId);
-
         return ResponseEntity.ok(AdminSessionResponseDTO.from(result));
     }
 }

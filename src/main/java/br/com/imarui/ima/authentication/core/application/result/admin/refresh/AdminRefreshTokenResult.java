@@ -8,7 +8,6 @@ import java.util.Objects;
 
 public record AdminRefreshTokenResult(
         Long id,
-        Long userId,
         Long sessionId,
         String status,
         Instant createdAt,
@@ -22,7 +21,6 @@ public record AdminRefreshTokenResult(
 
         return new AdminRefreshTokenResult(
                 refreshToken.getId(),
-                refreshToken.getSession().getUserId(),
                 refreshToken.getSession().getId(),
                 refreshToken.getStatus().name(),
                 refreshToken.getCreatedAt(),

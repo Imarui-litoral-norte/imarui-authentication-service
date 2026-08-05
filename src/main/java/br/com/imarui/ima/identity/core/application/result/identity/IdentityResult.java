@@ -1,0 +1,33 @@
+package br.com.imarui.ima.identity.core.application.result.identity;
+
+import br.com.imarui.ima.identity.core.domain.enums.identity.IdentityKind;
+import br.com.imarui.ima.identity.core.domain.enums.identity.IdentityStatus;
+import br.com.imarui.ima.identity.core.domain.model.identity.Identity;
+
+import java.time.Instant;
+import java.util.UUID;
+
+public record IdentityResult(
+        UUID id,
+        IdentityKind kind,
+        String primaryEmail,
+        IdentityStatus status,
+        Instant createdAt,
+        Instant updatedAt,
+        Instant activatedAt,
+        Instant disabledAt
+) {
+
+    public static IdentityResult from(Identity identity) {
+        return new IdentityResult(
+                identity.getId().value(),
+                identity.getKind(),
+                identity.getPrimaryEmail().email().value(),
+                identity.getStatus(),
+                identity.getCreatedAt(),
+                identity.getUpdatedAt(),
+                identity.getActivatedAt(),
+                identity.getDisabledAt()
+        );
+    }
+}

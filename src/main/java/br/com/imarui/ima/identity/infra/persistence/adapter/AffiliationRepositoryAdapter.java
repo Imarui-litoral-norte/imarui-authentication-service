@@ -24,6 +24,7 @@ public class AffiliationRepositoryAdapter implements AffiliationRepository {
     private final AffiliationJpaRepository jpaRepository;
     private final AffiliationPersistenceMapper mapper;
 
+    @Override
     public Affiliation save(Affiliation affiliation) {
         AffiliationEntity entity = jpaRepository
                 .findById(affiliation.getId().value())
@@ -38,14 +39,30 @@ public class AffiliationRepositoryAdapter implements AffiliationRepository {
         );
     }
 
+    @Override
+    public List<Affiliation> findAllActive() {
+        return jpaRepository
+                .findAllByStatusOrderByStartedAtDesc(
+                        AffiliationStatus.ACTIVE
+                )
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public Optional<Affiliation> findById(
             AffiliationId affiliationId
     ) {
         return jpaRepository
-                .findById(affiliationId.value())
+                .findByIdAndStatus(
+                        affiliationId.value(),
+                        AffiliationStatus.ACTIVE
+                )
                 .map(mapper::toDomain);
     }
 
+    @Override
     public Optional<Affiliation> findByIdForUpdate(
             AffiliationId affiliationId
     ) {
@@ -54,24 +71,33 @@ public class AffiliationRepositoryAdapter implements AffiliationRepository {
                 .map(mapper::toDomain);
     }
 
+    @Override
     public List<Affiliation> findByTenantId(TenantId tenantId) {
         return jpaRepository
-                .findByTenantId(tenantId.value())
+                .findByTenantIdAndStatusOrderByStartedAtDesc(
+                        tenantId.value(),
+                        AffiliationStatus.ACTIVE
+                )
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
     }
 
+    @Override
     public List<Affiliation> findByIdentityId(
             IdentityId identityId
     ) {
         return jpaRepository
-                .findByIdentityId(identityId.value())
+                .findByIdentityIdAndStatusOrderByStartedAtDesc(
+                        identityId.value(),
+                        AffiliationStatus.ACTIVE
+                )
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
     }
 
+    @Override
     public boolean existsActiveByTenantAndIdentity(
             TenantId tenantId,
             IdentityId identityId
@@ -84,6 +110,7 @@ public class AffiliationRepositoryAdapter implements AffiliationRepository {
                 );
     }
 
+    @Override
     public boolean existsEmployeeRegistration(
             TenantId tenantId,
             EmployeeRegistration registration
@@ -94,6 +121,7 @@ public class AffiliationRepositoryAdapter implements AffiliationRepository {
         );
     }
 
+    @Override
     public boolean existsCustomerCode(
             TenantId tenantId,
             CustomerCode customerCode
@@ -104,6 +132,7 @@ public class AffiliationRepositoryAdapter implements AffiliationRepository {
         );
     }
 
+    @Override
     public boolean existsSupplierCode(
             TenantId tenantId,
             SupplierCode supplierCode

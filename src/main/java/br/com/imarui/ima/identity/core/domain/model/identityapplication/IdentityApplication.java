@@ -27,15 +27,11 @@ public final class IdentityApplication {
     private final Cpf cpf;
     private final Email email;
     private final PhoneNumber phoneNumber;
-
     private IdentityApplicationStatus status;
-
     private final Instant requestedAt;
     private Instant reviewedAt;
-
-    private ReviewerId reviewedBy;
+    private IdentityId reviewedBy;
     private String rejectionReason;
-
     private IdentityId resolvedIdentityId;
     private TenantId assignedTenantId;
     private AffiliationId resultingAffiliationId;
@@ -49,7 +45,7 @@ public final class IdentityApplication {
             IdentityApplicationStatus status,
             Instant requestedAt,
             Instant reviewedAt,
-            ReviewerId reviewedBy,
+            IdentityId reviewedBy,
             String rejectionReason,
             IdentityId resolvedIdentityId,
             TenantId assignedTenantId,
@@ -138,7 +134,7 @@ public final class IdentityApplication {
             @NotNull IdentityApplicationStatus status,
             @NotNull Instant requestedAt,
             @Nullable Instant reviewedAt,
-            @Nullable ReviewerId reviewedBy,
+            @Nullable IdentityId reviewedBy,
             @Nullable String rejectionReason,
             @Nullable IdentityId resolvedIdentityId,
             @Nullable TenantId assignedTenantId,
@@ -162,7 +158,7 @@ public final class IdentityApplication {
     }
 
     public void approve(
-            @NotNull ReviewerId reviewedBy,
+            @NotNull IdentityId reviewedBy,
             @NotNull IdentityId resolvedIdentityId,
             @NotNull TenantId assignedTenantId,
             @NotNull AffiliationId resultingAffiliationId,
@@ -210,7 +206,7 @@ public final class IdentityApplication {
     }
 
     public void reject(
-            @NotNull ReviewerId reviewedBy,
+            @NotNull IdentityId reviewedBy,
             @NotNull String rejectionReason,
             @NotNull Instant now
     ) {

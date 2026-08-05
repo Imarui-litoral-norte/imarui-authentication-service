@@ -8,7 +8,6 @@ import java.util.Objects;
 
 public record AdminSessionResult(
         Long id,
-        Long userId,
         String status,
         Instant createdAt,
         Instant expiresAt,
@@ -20,7 +19,6 @@ public record AdminSessionResult(
 
         return new AdminSessionResult(
                 session.getId(),
-                session.getUserId(),
                 session.getStatus().name(),
                 session.getCreatedAt(),
                 session.getExpiresAt(),

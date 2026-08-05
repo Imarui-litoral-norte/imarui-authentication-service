@@ -12,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(
-        name = "legal_entity_identities",
+        name = "ima_legal_entity_identities",
         indexes = {
                 @Index(name = "idx_legal_entity_identities_cnpj", columnList = "cnpj")
         },
